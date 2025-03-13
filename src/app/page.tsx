@@ -1,6 +1,7 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -10,6 +11,13 @@ import {
   ParkingHistory,
 } from "./_components/custom-data-table/columns";
 import CustomDataTable from "./_components/custom-data-table/custom-data-table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 async function getData(): Promise<ParkingHistory[]> {
   // Fetch data from your API here.
@@ -68,22 +76,57 @@ async function getData(): Promise<ParkingHistory[]> {
 export default async function Home() {
   const data = await getData();
   return (
-    <div>
-      <div className="container mx-auto py-10 ">
-        <Card className="p-8">
-          <CardHeader className="p-0">
-            <CardTitle className="text-lg">입출차 조회</CardTitle>
+    <div className="flex flex-col w-full gap-10">
+      <div className="container max-w-full mx-10">
+        <Card>
+          <CardHeader>
+            <CardTitle>검색 조건</CardTitle>
           </CardHeader>
-          <CardContent className="p-0">
-            <CustomDataTable columns={columns} data={data} />
-          </CardContent>
-          <CardFooter>
-            <div className="flex-1 text-sm text-muted-foreground">
-              row(s) selected.
+          <CardContent className="flex justify-between">
+            <div className="flex flex-col gap-2">
+              <CardDescription>입출유형</CardDescription>
+              <Select>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Theme" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="light">Light</SelectItem>
+                  <SelectItem value="dark">Dark</SelectItem>
+                  <SelectItem value="system">System</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-          </CardFooter>
+            <div className="flex flex-col gap-2">
+              <CardDescription>입출유형</CardDescription>
+              <Select>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Theme" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="light">Light</SelectItem>
+                  <SelectItem value="dark">Dark</SelectItem>
+                  <SelectItem value="system">System</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-col gap-2">
+              <CardDescription>입출유형</CardDescription>
+              <Select>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Theme" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="light">Light</SelectItem>
+                  <SelectItem value="dark">Dark</SelectItem>
+                  <SelectItem value="system">System</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
         </Card>
       </div>
+
+      <CustomDataTable columns={columns} data={data} />
     </div>
   );
 }
