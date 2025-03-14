@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+  <!-- 사각형 배경 -->
+  <rect x="50" y="50" width="400" height="400" rx="50" fill="#000000" />
+  
+  <!-- 흰색 P 글자 -->
+  <path d="M170,150 L170,350 M170,150 L270,150 Q320,150 320,200 L320,250 Q320,300 270,300 L170,300" 
+        stroke="#ffffff" stroke-width="36" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- 짧은 흰색 선 - 아래쪽에 위치 -->
+  <line x1="320" y1="350" x2="370" y2="350" stroke="#ffffff" stroke-width="30" stroke-linecap="round" />
+</svg>

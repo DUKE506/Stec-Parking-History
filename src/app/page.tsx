@@ -1,23 +1,12 @@
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   columns,
   ParkingHistory,
 } from "./_components/custom-data-table/columns";
 import CustomDataTable from "./_components/custom-data-table/custom-data-table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
+import FilterArea from "./_components/custom-select/custom-select";
+import HistoryInfoArea from "./_components/history-info-area/history-info-area";
+import Navigation from "./_components/nav/nav";
 
 async function getData(): Promise<ParkingHistory[]> {
   // Fetch data from your API here.
@@ -76,57 +65,15 @@ async function getData(): Promise<ParkingHistory[]> {
 export default async function Home() {
   const data = await getData();
   return (
-    <div className="flex flex-col w-full gap-10">
-      <div className="container max-w-full mx-10">
-        <Card>
-          <CardHeader>
-            <CardTitle>검색 조건</CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between">
-            <div className="flex flex-col gap-2">
-              <CardDescription>입출유형</CardDescription>
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Theme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex flex-col gap-2">
-              <CardDescription>입출유형</CardDescription>
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Theme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex flex-col gap-2">
-              <CardDescription>입출유형</CardDescription>
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Theme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="h-dvh">
+      <div className="flex flex-col w-full gap-10  h-full">
+        <Navigation />
+        <FilterArea />
+        <div className="flex px-10 gap-10  flex-1 min-h-0 pb-10">
+          <CustomDataTable columns={columns} data={data} />
+          <HistoryInfoArea />
+        </div>
       </div>
-
-      <CustomDataTable columns={columns} data={data} />
     </div>
   );
 }

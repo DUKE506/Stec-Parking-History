@@ -50,8 +50,8 @@ const CustomDataTable = <TData, TValue>({
   });
 
   return (
-    <div className="container max-w-full mx-10">
-      <Card className="p-8">
+    <div className="container max-w-full flex-3 ">
+      <Card className="p-8 h-full">
         <CardHeader className="p-0">
           <CardTitle className="text-lg">입출차 조회</CardTitle>
         </CardHeader>
