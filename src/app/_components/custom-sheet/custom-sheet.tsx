@@ -26,17 +26,24 @@ const CustomSheet = ({ label }: { label: string }) => {
           <LucideIcon name="ArrowRight" size={16} />
         </div>
       </SheetTrigger>
-      <SheetContent side={side} className="px-8">
-        <SheetHeader className="px-0">
+      <SheetContent side={side} className="pt-8">
+        <SheetHeader className="px-8 py-0">
           <SheetTitle>07가4991</SheetTitle>
           <div className="flex justify-between">
             <SheetDescription>최근 7일</SheetDescription>
             <SheetDescription>(기준 2025-03-14)</SheetDescription>
           </div>
         </SheetHeader>
-        <VisitLogCard type={true} />
-        <VisitLogCard type={false} />
-        <SheetFooter></SheetFooter>
+        <div className="flex flex-col gap-4 px-8 overflow-auto pb-8">
+          <VisitLogCard type={true} />
+          <VisitLogCard type={false} />
+          <VisitLogCard type={true} />
+          <VisitLogCard type={false} />
+          <VisitLogCard type={true} />
+          <VisitLogCard type={false} />
+          <VisitLogCard type={true} />
+          <VisitLogCard type={false} />
+        </div>
       </SheetContent>
     </Sheet>
   );

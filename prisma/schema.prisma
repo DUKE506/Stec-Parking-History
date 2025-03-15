@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CarType {
+  REGULAR // 정기차량
+  RESERVED // 예약차량
+}
+
+enum ParkingState {
+  IN
+  OUT
+}
+
+model History {
+  id              Int          @id @default(autoincrement())
+  carType         CarType
+  parkingState    ParkingState
+  carNumber       String
+  entryTime       String
+  exitTime        String
+  totalTime       String
+  parkingAreaName String
+  entryArea       String
+  exitArea        String
+  dong            String
+  ho              String
+  isBlack         Boolean
+  note            String
+  GateLog         GateLog[]
+}
+
+model GateLog {
+  id               Int     @id @default(autoincrement())
+  //입출차 일련번호
+  seq              String
+  //주차장 id
+  parkingAreaId    String
+  //차량번호
+  carNumber        String
+  //입출상태
+  state            String
+  //입출상태명
+  stateName        String
+  //게이트id
+  gateId           String
+  //게이트명
+  gateName         String
+  //라인번호
+  LineNumber       String
+  //입출차 시각
+  time             String
+  //lpr상태
+  lprState         String
+  //lpr상태명
+  lprStateName     String
+  //차량구분명
+  carTypeName      String
+  //블랙리스트정보
+  blackListInfo    String
+  //블랙리스트여부
+  isBlack          Boolean
+  //블랙리스트사유
+  blackDescription String
+  //등록일시
+  addTime          String
+  //이미지 경로
+  imagePath        String
+  //동
+  dong             String
+  //호
+  ho               String
+  //예약차량여부
+  isResevation     Boolean
+  //대기여부
+  isWait           Boolean
+  //대기사유
+  waitDescription  String
+  //총 주차시간
+  totalTime        String
+  //방문포인트사용시간
+  visitPointTime   String
+  //기타 사유 - 예약차량 경우 예약사유
+  etc              String
+  //히스토리
+  history          History @relation(fields: [historyId], references: [id])
+  historyId        Int
+}
