@@ -13,11 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// 차량 종류
 enum CarType {
+  VISIT // 방문차량
   REGULAR // 정기차량
   RESERVED // 예약차량
 }
 
+//주차상태
 enum ParkingState {
   IN
   OUT
@@ -25,25 +28,25 @@ enum ParkingState {
 
 model History {
   id              Int          @id @default(autoincrement())
-  parkingSeq      String @unique
-  carType         CarType
+  parkingSeq      String       @unique
+  carType         CarType?
   parkingState    ParkingState
   carNumber       String
   entryTime       String
-  exitTime        String
-  totalTime       String
+  exitTime        String?
+  totalTime       Int?
   parkingAreaName String
   entryArea       String
-  exitArea        String
-  dong            String
-  ho              String
-  isBlack         Boolean
-  note            String
+  exitArea        String?
+  dong            String?
+  ho              String?
+  isBlack         Boolean?
+  note            String?
   GateLog         GateLog[]
 }
 
 model GateLog {
-  id               Int     @id @default(autoincrement())
+  id               Int      @id @default(autoincrement())
   //입출차 일련번호
   seq              String
   //주차장 id
@@ -51,11 +54,11 @@ model GateLog {
   //차량번호
   carNumber        String
   //입출상태
-  state            String
+  state            String?
   //입출상태명
-  stateName        String
+  stateName        String?
   //게이트id
-  gateId           String
+  gateId           String?
   //게이트명
   gateName         String
   //라인번호
@@ -71,30 +74,30 @@ model GateLog {
   // //블랙리스트정보
   // blackListInfo    String
   //블랙리스트여부
-  isBlack          Boolean
+  isBlack          Boolean?
   //블랙리스트사유
-  blackDescription String
+  blackDescription String?
   //등록일시
-  addTime          String
+  addTime          String?
   //이미지 경로
-  imagePath        String
+  imagePath        String?
   //동
-  dong             String
+  dong             String?
   //호
-  ho               String
+  ho               String?
   //예약차량여부
-  isResevation     Boolean
+  isResevation     Boolean?
   //대기여부
-  isWait           Boolean
+  isWait           Boolean?
   //대기사유
-  waitDescription  String
+  waitDescription  String?
   //총 주차시간
-  totalTime        Int
+  totalTime        Int?
   //방문포인트사용시간
-  visitPointTime   Int
+  visitPointTime   Int?
   //기타 사유 - 예약차량 경우 예약사유
-  etc              String
+  etc              String?
   //히스토리
-  history          History @relation(fields: [historyId], references: [id])
-  historyId        Int
+  history          History? @relation(fields: [historyId], references: [id])
+  historyId        Int?
 }

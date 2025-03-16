@@ -1,5 +1,8 @@
 "use client";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { switchCarTypeKR } from "@/lib/utils";
+import { CarType, History, ParkingState } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Circle } from "lucide-react";
 
@@ -20,14 +23,32 @@ export type ParkingHistory = {
   note: string | null;
 };
 
-export const columns: ColumnDef<ParkingHistory>[] = [
+export const columns: ColumnDef<History>[] = [
   {
     accessorKey: "carType",
     header: "입출유형",
+    cell: ({ row }) => {
+      const value = row.getValue('carType') as CarType
+      return switchCarTypeKR(value);
+    }
   },
   {
-    accessorKey: "parkingType",
+    accessorKey: "parkingState",
     header: "차량상태",
+    cell: ({ row }) => {
+      const value = row.getValue("parkingState") as ParkingState;
+      let backgroundColor = "bg-muted-foreground"
+      switch (value) {
+        case ParkingState.IN:
+          backgroundColor = "bg-blue-500";
+          break
+        case ParkingState.OUT:
+          backgroundColor = "bg-destructive";
+          break;
+      };
+
+      return <Badge className={`${backgroundColor}`}>{value}</Badge>
+    }
   },
   {
     accessorKey: "carNumber",
