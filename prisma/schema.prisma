@@ -25,6 +25,7 @@ enum ParkingState {
 
 model History {
   id              Int          @id @default(autoincrement())
+  parkingSeq      String @unique
   carType         CarType
   parkingState    ParkingState
   carNumber       String
@@ -58,7 +59,7 @@ model GateLog {
   //게이트명
   gateName         String
   //라인번호
-  LineNumber       String
+  lineNumber       Int
   //입출차 시각
   time             String
   //lpr상태
@@ -67,8 +68,8 @@ model GateLog {
   lprStateName     String
   //차량구분명
   carTypeName      String
-  //블랙리스트정보
-  blackListInfo    String
+  // //블랙리스트정보
+  // blackListInfo    String
   //블랙리스트여부
   isBlack          Boolean
   //블랙리스트사유
@@ -88,9 +89,9 @@ model GateLog {
   //대기사유
   waitDescription  String
   //총 주차시간
-  totalTime        String
+  totalTime        Int
   //방문포인트사용시간
-  visitPointTime   String
+  visitPointTime   Int
   //기타 사유 - 예약차량 경우 예약사유
   etc              String
   //히스토리

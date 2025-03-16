@@ -1,5 +1,9 @@
+export enum CarType {
+  REGULAR, // 정기차량
+  RESERVED, // 예약차량
+}
 
-export const enum CarType {
-    '정기차량',
-    '예약차량'
+export enum ParkingState {
+  IN,
+  OUT,
 }

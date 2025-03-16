@@ -34,7 +34,7 @@ const CustomSheet = ({ label }: { label: string }) => {
             <SheetDescription>(기준 2025-03-14)</SheetDescription>
           </div>
         </SheetHeader>
-        <div className="flex flex-col gap-4 px-8 overflow-auto pb-8">
+        <div className="flex flex-col gap-6 px-8 overflow-auto pb-8">
           <VisitLogCard type={true} />
           <VisitLogCard type={false} />
           <VisitLogCard type={true} />
