@@ -57,3 +57,7 @@ export const switchParkingStateKR = (carType: ParkingState) => {
       return "Unknown";
   }
 };
+
+/**
+ * time
+ */

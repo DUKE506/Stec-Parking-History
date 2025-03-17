@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useHistoryStore } from "@/stores/histories-store";
 import {
   ColumnDef,
   flexRender,
@@ -23,20 +24,24 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import React from "react";
+import React, { useEffect } from "react";
+import { History } from "@prisma/client";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  // data: TData[];
 }
 
 const CustomDataTable = <TData, TValue>({
   columns,
-  data,
-}: DataTableProps<TData, TValue>) => {
+}: // data,
+DataTableProps<TData, TValue>) => {
+  //입출차 목록 store
+  const { histories, setCurrentHistory, fetchHistories } = useHistoryStore();
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const table = useReactTable({
-    data,
+    data: histories as TData[],
     columns,
     getCoreRowModel: getCoreRowModel(),
     //Sorting --
@@ -49,11 +54,17 @@ const CustomDataTable = <TData, TValue>({
     //Sorting --
   });
 
+  useEffect(() => {
+    fetchHistories();
+  }, [fetchHistories]);
+
   return (
     <div className="container max-w-full flex-3 ">
       <Card className="p-8 h-full">
         <CardHeader className="p-0">
-          <CardTitle className="text-lg">입출차 조회</CardTitle>
+          <CardTitle className="text-lg">
+            입출차 조회 (데이터수 : {histories.length})
+          </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <div className="rounded-md border">
@@ -82,6 +93,7 @@ const CustomDataTable = <TData, TValue>({
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
+                      onClick={() => setCurrentHistory(row.original as History)}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>

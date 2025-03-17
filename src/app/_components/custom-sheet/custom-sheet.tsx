@@ -15,14 +15,24 @@ import LucideIcon from "../lucide-icon/lucide-icon";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useHistoryStore } from "@/stores/histories-store";
+import { GateLog } from "@prisma/client";
+import dayjs from "dayjs";
 
-const CustomSheet = ({ label }: { label: string }) => {
+const CustomSheet = ({
+  label,
+  onClick,
+}: {
+  label: string;
+  onClick: () => void;
+}) => {
+  const { currentHistoryLog } = useHistoryStore();
   const side = "right";
   return (
     <Sheet key={side}>
-      <SheetTrigger asChild>
+      <SheetTrigger asChild onClick={onClick}>
         <div className="flex gap-1">
-          <Label className="text-xs">더보기</Label>
+          <Label className="text-xs">{label ?? "더보기"}</Label>
           <LucideIcon name="ArrowRight" size={16} />
         </div>
       </SheetTrigger>
@@ -35,14 +45,23 @@ const CustomSheet = ({ label }: { label: string }) => {
           </div>
         </SheetHeader>
         <div className="flex flex-col gap-6 px-8 overflow-auto pb-8">
-          <VisitLogCard type={true} />
+          {currentHistoryLog?.map((gateLog) => {
+            return (
+              <VisitLogCard
+                data={gateLog}
+                key={gateLog.id}
+                type={gateLog.stateName == "입차" ? true : false}
+              />
+            );
+          })}
+          {/* <VisitLogCard type={true} />
           <VisitLogCard type={false} />
           <VisitLogCard type={true} />
           <VisitLogCard type={false} />
           <VisitLogCard type={true} />
           <VisitLogCard type={false} />
           <VisitLogCard type={true} />
-          <VisitLogCard type={false} />
+          <VisitLogCard type={false} /> */}
         </div>
       </SheetContent>
     </Sheet>
@@ -51,19 +70,30 @@ const CustomSheet = ({ label }: { label: string }) => {
 
 export default CustomSheet;
 
-export const VisitLogCard = ({ type }: { type: boolean }) => {
+/**
+ * log 전용 컴포넌트
+ * @param param0
+ * @returns
+ */
+export const VisitLogCard = ({
+  type,
+  data,
+}: {
+  type: boolean;
+  data: GateLog;
+}) => {
   const backgroundColor = type ? "bg-blue-500" : "bg-destructive";
 
   return (
     <Card>
       <CardHeader className="flex-row justify-between">
-        <CardTitle>2023-03-10 09:01:12</CardTitle>
+        <CardTitle>{dayjs(data.time).format("YYYY-MM-DD HH:mm:ss")}</CardTitle>
         <Badge className={`${backgroundColor}`}>{type ? "입차" : "출차"}</Badge>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        <LogItem label="초소" value="정문" />
-        <LogItem label="입출유형" value="정기차량" />
-        <LogItem label="방문지" value="101동 1101호" />
+        <LogItem label="초소" value={data.gateName} />
+        <LogItem label="입출유형" value={data.carTypeName} />
+        <LogItem label="방문지" value={`${data.dong}동 ${data.ho}호`} />
       </CardContent>
     </Card>
   );

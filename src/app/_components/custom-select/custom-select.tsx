@@ -47,7 +47,7 @@ const CustomSelect = <T extends EnumType>({
       <Select>
         {/* <SelectTrigger className="w-[180px]"> */}
         <SelectTrigger className="w-full">
-          <SelectValue placeholder="Theme" />
+          <SelectValue placeholder="선택" />
         </SelectTrigger>
         <SelectContent>
           {}

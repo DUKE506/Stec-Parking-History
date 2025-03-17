@@ -32,12 +32,14 @@ model History {
   carType         CarType?
   parkingState    ParkingState
   carNumber       String
-  entryTime       String
-  exitTime        String?
+  entryTime       DateTime
+  exitTime        DateTime?
   totalTime       Int?
   parkingAreaName String
   entryArea       String
   exitArea        String?
+  entryImage      String?
+  exitImage       String?
   dong            String?
   ho              String?
   isBlack         Boolean?
@@ -64,7 +66,7 @@ model GateLog {
   //라인번호
   lineNumber       Int
   //입출차 시각
-  time             String
+  time             DateTime
   //lpr상태
   lprState         String
   //lpr상태명

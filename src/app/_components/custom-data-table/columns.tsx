@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { switchCarTypeKR } from "@/lib/utils";
 import { CarType, History, ParkingState } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Circle } from "lucide-react";
+import { ArrowUpDown, Check, Circle } from "lucide-react";
+import dayjs from "dayjs";
 
 export type ParkingHistory = {
   id: string;
@@ -95,8 +96,13 @@ export const columns: ColumnDef<History>[] = [
       );
     },
     cell: ({ row }) => {
-      const value = row.getValue("entryTime") as string;
-      return <div className="text-center">{value}</div>;
+      const value = row.getValue("entryTime") as Date;
+      const formatValue = dayjs(value).format("YYYY-MM-DD HH:mm:ss");
+
+      console.log("원본 : ", value);
+      console.log("변형 : ", formatValue);
+
+      return <div className="text-center">{formatValue}</div>;
     },
   },
   {
@@ -118,7 +124,9 @@ export const columns: ColumnDef<History>[] = [
     },
     cell: ({ row }) => {
       const value = row.getValue("exitTime") as string;
-      return <div className="text-center">{value}</div>;
+      const formatValue = dayjs(value).format("YYYY-MM-DD HH:mm:ss");
+
+      return <div className="text-center">{formatValue}</div>;
     },
   },
   {
@@ -216,7 +224,9 @@ export const columns: ColumnDef<History>[] = [
     header: "블랙",
     cell: ({ row }) => {
       const value = row.getValue("isBlack");
-      const returnValue = value ? <Circle color="red" size={20} /> : null;
+      const returnValue = value ? (
+        <Circle className="text-destructive" size={20} />
+      ) : null;
       return (
         <div>
           <div className="flex justify-center">{returnValue}</div>
@@ -229,7 +239,10 @@ export const columns: ColumnDef<History>[] = [
     header: () => <div className="text-center">비고</div>,
     cell: ({ row }) => {
       const value = row.getValue("note") as string;
-      return <div className="text-center">{value}</div>;
+      const returnValue = value ? (
+        <Check className="text-blue-500" size={20} />
+      ) : null;
+      return <div className="flex justify-center">{returnValue}</div>;
     },
   },
 ];
