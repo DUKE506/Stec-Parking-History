@@ -51,11 +51,11 @@ export const useHistoryStore = create<HistoriesState>()(
        * @param history
        */
       fetchWeekLogs: async (history) => {
-        const formatDate = dayjs(history.exitTime).format(
+        const formatDate = dayjs(history.entryTime).format(
           "YYYY-MM-DD HH:mm:ss"
         );
         const res = await fetch(
-          `/api/history/info/${formatDate.split(" ")[0]}`
+          `/api/history/info/${formatDate.split(" ")[0]}/${history.carNumber}`
         );
         const data = await res.json();
 

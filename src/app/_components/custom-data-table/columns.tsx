@@ -96,11 +96,12 @@ export const columns: ColumnDef<History>[] = [
       );
     },
     cell: ({ row }) => {
-      const value = row.getValue("entryTime") as Date;
-      const formatValue = dayjs(value).format("YYYY-MM-DD HH:mm:ss");
+      const value = row.original.entryTime;
+      if (!value) {
+        return <div className="text-center"></div>;
+      }
 
-      console.log("원본 : ", value);
-      console.log("변형 : ", formatValue);
+      const formatValue = dayjs(value).format("YYYY-MM-DD HH:mm:ss");
 
       return <div className="text-center">{formatValue}</div>;
     },
@@ -123,10 +124,14 @@ export const columns: ColumnDef<History>[] = [
       );
     },
     cell: ({ row }) => {
-      const value = row.getValue("exitTime") as string;
+      const value = row.original.exitTime;
+      if (!value) {
+        return <div className="text-center"></div>;
+      }
+
       const formatValue = dayjs(value).format("YYYY-MM-DD HH:mm:ss");
 
-      return <div className="text-center">{formatValue}</div>;
+      return <div className="text-center">{formatValue ?? ""}</div>;
     },
   },
   {

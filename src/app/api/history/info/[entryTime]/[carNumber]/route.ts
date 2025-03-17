@@ -8,15 +8,17 @@ import { NextRequest, NextResponse } from "next/server";
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ entryTime: string }> }
+  { params }: { params: Promise<{ entryTime: string; carNumber: string }> }
 ) {
-  const date = new Date((await params).entryTime);
+  const entry = new Date((await params).entryTime);
+  const carNumber = (await params).carNumber;
   const res = await prisma.gateLog.findMany({
     where: {
       time: {
-        lte: date,
-        gte: sub(date, { days: 7 }),
+        lte: entry,
+        gte: sub(entry, { days: 7 }),
       },
+      carNumber: carNumber,
     },
   });
 
