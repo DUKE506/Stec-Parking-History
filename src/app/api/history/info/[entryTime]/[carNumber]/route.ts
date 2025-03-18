@@ -11,12 +11,18 @@ export async function GET(
   { params }: { params: Promise<{ entryTime: string; carNumber: string }> }
 ) {
   const entry = new Date((await params).entryTime);
+  entry.setUTCHours(23, 59, 59, 999);
+
+  const subDate = sub(entry, { days: 6 });
+  subDate.setHours(0, 0, 0, 0);
+
   const carNumber = (await params).carNumber;
+
   const res = await prisma.gateLog.findMany({
     where: {
       time: {
         lte: entry,
-        gte: sub(entry, { days: 7 }),
+        gte: subDate,
       },
       carNumber: carNumber,
     },

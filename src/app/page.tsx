@@ -1,8 +1,8 @@
 "use client";
 import { columns } from "./_components/custom-data-table/columns";
-import CustomDataTable from "./_components/custom-data-table/custom-data-table";
+import { DataTableArea } from "./_components/custom-data-table/custom-data-table";
+import FilterArea from "./_components/filter-area/filter-area";
 
-import FilterArea from "./_components/custom-select/custom-select";
 import HistoryInfoArea from "./_components/history-info-area/history-info-area";
 import Navigation from "./_components/nav/nav";
 
@@ -13,7 +13,7 @@ export default function Home() {
         <Navigation />
         <FilterArea />
         <div className="flex px-10 gap-10  flex-1 min-h-0 pb-10">
-          <CustomDataTable columns={columns} />
+          <DataTableArea title="입출차 조회" />
           <HistoryInfoArea />
         </div>
       </div>

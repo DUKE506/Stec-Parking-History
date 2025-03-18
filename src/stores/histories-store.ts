@@ -4,14 +4,31 @@ import { devtools } from "zustand/middleware";
 import dayjs from "dayjs";
 
 interface HistoriesState {
+  //입출차 목록
   histories: History[];
+  //입출차 클릭항목
   currentHistory: History | null;
-  currentHistoryLog: GateLog[] | null;
+  //View 사이즈
+  historyViewSize: number;
+
+  activePage: number;
+
   setHistories: (newHistories: History[]) => void;
+
+  //입출차 클릭 핸들러
   setCurrentHistory: (selected: History | null) => void;
+
+  //입출차 정보 비고 작성 핸들러
   setHistoryNote: (history: History) => void;
+
+  //view 사이즈 핸들러
+  setHistoryViewSize: (num: number) => void;
+
+  //pagination
+  setPagination: (page: number) => Promise<void>;
+
+  //입출차 조회
   fetchHistories: () => Promise<void>;
-  fetchWeekLogs: (history: History) => Promise<void>;
 }
 
 export const useHistoryStore = create<HistoriesState>()(
@@ -19,7 +36,8 @@ export const useHistoryStore = create<HistoriesState>()(
     (set, get) => ({
       histories: [],
       currentHistory: null,
-      currentHistoryLog: null,
+      historyViewSize: 20,
+      activePage: 1,
       setHistories: (newHistories) => set({ histories: newHistories }),
       setCurrentHistory: (selected) => {
         set({ currentHistory: selected });
@@ -37,6 +55,32 @@ export const useHistoryStore = create<HistoriesState>()(
 
         get().fetchHistories();
       },
+      /**
+       * 입출차 이력 뷰 개수
+       * @param num
+       */
+      setHistoryViewSize: (num) => {
+        console.log("설정 개수 : " + num);
+        set({ historyViewSize: num });
+      },
+
+      /**
+       * 입출차 이력 페이지네이션
+       */
+      setPagination: async (page) => {
+        set({ activePage: page });
+        //현재페이지
+        const curPage = get().activePage;
+        console.log("변경 페이지 : " + curPage);
+        //view개수
+        const viewSize = get().historyViewSize;
+        console.log("뷰 수 : " + viewSize);
+
+        try {
+        } catch (err) {
+          console.error(err);
+        }
+      },
       fetchHistories: async () => {
         try {
           const res = await fetch("/api/history");
@@ -45,21 +89,6 @@ export const useHistoryStore = create<HistoriesState>()(
         } catch (err) {
           console.error(err);
         }
-      },
-      /**
-       * 최근 7일 조회
-       * @param history
-       */
-      fetchWeekLogs: async (history) => {
-        const formatDate = dayjs(history.entryTime).format(
-          "YYYY-MM-DD HH:mm:ss"
-        );
-        const res = await fetch(
-          `/api/history/info/${formatDate.split(" ")[0]}/${history.carNumber}`
-        );
-        const data = await res.json();
-
-        set({ currentHistoryLog: data.data as GateLog[] });
       },
     }),
     { name: "history-store" } // DevTools에서 보이는 Store 이름(선택사항)

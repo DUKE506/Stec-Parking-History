@@ -18,6 +18,8 @@ import { Badge } from "@/components/ui/badge";
 import { useHistoryStore } from "@/stores/histories-store";
 import { GateLog } from "@prisma/client";
 import dayjs from "dayjs";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useHistoryInfoStore } from "@/stores/history-info-store";
 
 const CustomSheet = ({
   label,
@@ -26,7 +28,9 @@ const CustomSheet = ({
   label: string;
   onClick: () => void;
 }) => {
-  const { currentHistoryLog } = useHistoryStore();
+  const { currentHistory } = useHistoryStore();
+  const { currentHistoryLog, loading } = useHistoryInfoStore();
+
   const side = "right";
   return (
     <Sheet key={side}>
@@ -38,30 +42,38 @@ const CustomSheet = ({
       </SheetTrigger>
       <SheetContent side={side} className="pt-8">
         <SheetHeader className="px-8 py-0">
-          <SheetTitle>07가4991</SheetTitle>
+          <SheetTitle>{currentHistory?.carNumber}</SheetTitle>
           <div className="flex justify-between">
             <SheetDescription>최근 7일</SheetDescription>
-            <SheetDescription>(기준 2025-03-14)</SheetDescription>
+            <SheetDescription className="text-xs flex items-end">
+              기준 {dayjs(currentHistory?.entryTime).format("YYYY-MM-DD")}
+            </SheetDescription>
           </div>
         </SheetHeader>
         <div className="flex flex-col gap-6 px-8 overflow-auto pb-8">
-          {currentHistoryLog?.map((gateLog) => {
-            return (
-              <VisitLogCard
-                data={gateLog}
-                key={gateLog.id}
-                type={gateLog.stateName == "입차" ? true : false}
-              />
-            );
-          })}
-          {/* <VisitLogCard type={true} />
-          <VisitLogCard type={false} />
-          <VisitLogCard type={true} />
-          <VisitLogCard type={false} />
-          <VisitLogCard type={true} />
-          <VisitLogCard type={false} />
-          <VisitLogCard type={true} />
-          <VisitLogCard type={false} /> */}
+          {/**
+           * 스크롤 문제 해결해야할 느낌
+           */}
+          {loading
+            ? Array(4)
+                .fill(0)
+                .map((_, idx) => {
+                  return (
+                    <Skeleton
+                      key={idx}
+                      className="h-[170px] w-full rounded-xl bg-input"
+                    />
+                  );
+                })
+            : currentHistoryLog?.map((gateLog) => {
+                return (
+                  <VisitLogCard
+                    data={gateLog}
+                    key={gateLog.id}
+                    type={gateLog.stateName == "입차" ? true : false}
+                  />
+                );
+              })}
         </div>
       </SheetContent>
     </Sheet>

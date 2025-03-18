@@ -188,7 +188,7 @@ export async function POST(req: NextRequest) {
  * @param requestBody
  * @returns
  */
-const gateLogTypeCheck = async (
+export const gateLogTypeCheck = async (
   requestBody: any
 ): Promise<ParkingState | null> => {
   //입차

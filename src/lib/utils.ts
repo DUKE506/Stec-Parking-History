@@ -59,5 +59,17 @@ export const switchParkingStateKR = (carType: ParkingState) => {
 };
 
 /**
- * time
+ * 차량구분 한글화
+ * @param carType
+ * @returns
  */
+export const switchViewSize = (carType: ParkingState) => {
+  switch (carType) {
+    case ParkingState.IN:
+      return "입차";
+    case ParkingState.OUT:
+      return "출차";
+    default:
+      return "Unknown";
+  }
+};

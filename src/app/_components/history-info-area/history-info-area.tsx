@@ -14,6 +14,7 @@ import { useHistoryStore } from "@/stores/histories-store";
 import { ParkingState } from "@prisma/client";
 import CustomTextAreaForm from "../custom-text-area/custom-textarea";
 import dayjs from "dayjs";
+import { useHistoryInfoStore } from "@/stores/history-info-store";
 const ImageArea = ({
   label,
   time,
@@ -37,7 +38,8 @@ const ImageArea = ({
 };
 
 const HistoryInfoArea = () => {
-  const { currentHistory, setHistoryNote, fetchWeekLogs } = useHistoryStore();
+  const { currentHistory, setHistoryNote } = useHistoryStore();
+  const { fetchWeekLogs } = useHistoryInfoStore();
 
   return (
     <Card className="flex-1 h-full">
