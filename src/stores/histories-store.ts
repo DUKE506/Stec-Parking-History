@@ -1,8 +1,6 @@
-import { GateLog, History } from "@prisma/client";
+import { History } from "@prisma/client";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import dayjs from "dayjs";
-import { prisma } from "@/lib/_server/db";
 import { ListBaseType, ListLoading, ListModel } from "@/types/list-type";
 
 interface HistoriesState {

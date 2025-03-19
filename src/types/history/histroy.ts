@@ -1,5 +1,6 @@
 //차량 구분
 export const CarType = {
+  ALL: "전체",
   REGULAR: "정기차량", // 정기차량
   RESERVED: "예약차량", // 예약차량
   VISIT: "방문차량",
@@ -9,6 +10,7 @@ export type CarUnionType = (typeof CarType)[keyof typeof CarType];
 
 //차량 상태
 export const ParkingState = {
+  ALL: "전체",
   IN: "입차",
   OUT: "출차",
 } as const;
