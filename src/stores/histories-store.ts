@@ -2,15 +2,19 @@ import { GateLog, History } from "@prisma/client";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import dayjs from "dayjs";
+import { prisma } from "@/lib/_server/db";
+import { ListBaseType, ListLoading, ListModel } from "@/types/list-type";
 
 interface HistoriesState {
   //입출차 목록
-  histories: History[];
+  histories: ListBaseType;
   //입출차 클릭항목
   currentHistory: History | null;
   //View 사이즈
   historyViewSize: number;
-
+  //전체 사이즈
+  historyTotalCount: number;
+  //현재페이지
   activePage: number;
 
   setHistories: (newHistories: History[]) => void;
@@ -34,9 +38,10 @@ interface HistoriesState {
 export const useHistoryStore = create<HistoriesState>()(
   devtools(
     (set, get) => ({
-      histories: [],
+      histories: ListLoading,
       currentHistory: null,
       historyViewSize: 20,
+      historyTotalCount: 0,
       activePage: 1,
       setHistories: (newHistories) => set({ histories: newHistories }),
       setCurrentHistory: (selected) => {
@@ -53,28 +58,40 @@ export const useHistoryStore = create<HistoriesState>()(
           return;
         }
 
-        get().fetchHistories();
+        const page = get().activePage;
+
+        get().setPagination(page);
       },
       /**
        * 입출차 이력 뷰 개수
        * @param num
        */
       setHistoryViewSize: (num) => {
-        console.log("설정 개수 : " + num);
         set({ historyViewSize: num });
+        const page = get().activePage;
+
+        get().setPagination(page);
       },
 
       /**
        * 입출차 이력 페이지네이션
        */
       setPagination: async (page) => {
+        set({ histories: ListLoading });
         set({ activePage: page });
         //현재페이지
         const curPage = get().activePage;
-        console.log("변경 페이지 : " + curPage);
         //view개수
         const viewSize = get().historyViewSize;
-        console.log("뷰 수 : " + viewSize);
+
+        const res = await fetch(
+          `/api/history/pagination?page=${curPage}&viewSize=${viewSize}`
+        );
+
+        const data = await res.json();
+        console.log("스토어 결과 : ", data as ListModel<History>);
+        set({ historyTotalCount: data.meta.totalItemCount });
+        set({ histories: data });
 
         try {
         } catch (err) {

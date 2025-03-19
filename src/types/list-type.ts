@@ -1,19 +1,34 @@
-class ListBaseType {}
+export class ListBaseType {}
 
-class ListError extends ListBaseType {}
+export class ListError extends ListBaseType {}
 
-class ListLoading extends ListBaseType {}
+export class ListLoading extends ListBaseType {}
 
-class ListType<T> extends ListBaseType {
-  constructor(public meta: ListMeta, public data: T[] = []) {
+export class ListModel<T> extends ListBaseType {
+  meta: ListMeta;
+  data: T[];
+
+  constructor({ meta, data }: { meta: ListMeta; data: T[] }) {
     super();
+    (this.meta = meta), (this.data = data);
   }
 }
 
-class ListMeta {
-  constructor(
-    public totalItemCount: number = 0,
-    public pageSize: number = 10,
-    public activePage: number = 1
-  ) {}
+export class ListMeta {
+  totalItemCount: number;
+  pageSize: number;
+  activePage: number;
+  constructor({
+    totalItemCount,
+    pageSize,
+    activePage,
+  }: {
+    totalItemCount: number;
+    pageSize: number;
+    activePage: number;
+  }) {
+    (this.totalItemCount = totalItemCount),
+      (this.pageSize = pageSize),
+      (this.activePage = activePage);
+  }
 }
