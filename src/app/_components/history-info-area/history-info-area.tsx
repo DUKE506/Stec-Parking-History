@@ -1,13 +1,7 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React, { useEffect } from "react";
 import Image from "next/image";
-import car from "../../../../public/차량번호판 인식사진.jpg";
+
 import { Badge } from "@/components/ui/badge";
 import CustomSheet from "../custom-sheet/custom-sheet";
 import { useHistoryStore } from "@/stores/histories-store";
@@ -15,6 +9,14 @@ import { ParkingState } from "@prisma/client";
 import CustomTextAreaForm from "../custom-text-area/custom-textarea";
 import dayjs from "dayjs";
 import { useHistoryInfoStore } from "@/stores/history-info-store";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 const ImageArea = ({
   label,
   time,
@@ -31,12 +33,16 @@ const ImageArea = ({
         <span className="text-xs">{time}</span>
       </div>
       <div className="relative h-full rounded-sm overflow-hidden max-h-[173.5px] min-h-[173.5px]">
-        {url != null ? <Image src={url} alt="이미지" fill /> : null}
+        {url ? <Image src={url} alt="이미지" fill /> : null}
       </div>
     </div>
   );
 };
 
+/**
+ * 이미지는 다이얼로그는 캐러샐로 구현
+ * @returns
+ */
 const HistoryInfoArea = () => {
   const { currentHistory, setHistoryNote } = useHistoryStore();
   const { fetchWeekLogs } = useHistoryInfoStore();
