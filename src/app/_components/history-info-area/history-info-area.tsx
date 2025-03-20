@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +17,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Carousel } from "@/components/ui/carousel";
+import { CustomCarousel } from "../custom-carousel/custom-carousel";
 const ImageArea = ({
   label,
   time,
@@ -45,7 +47,21 @@ const ImageArea = ({
  */
 const HistoryInfoArea = () => {
   const { currentHistory, setHistoryNote } = useHistoryStore();
+  const [isOpen, setIsOpen] = useState(false);
   const { fetchWeekLogs } = useHistoryInfoStore();
+  const [Images, setImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (currentHistory && currentHistory.entryImage) {
+      // 배열에 이미지 추가
+      setImages([currentHistory.entryImage]);
+
+      // 출차 이미지가 있으면 추가
+      if (currentHistory.exitImage) {
+        setImages([currentHistory.entryImage, currentHistory.exitImage]);
+      }
+    }
+  }, [currentHistory]);
 
   return (
     <Card className="flex-1 h-full">
@@ -60,19 +76,44 @@ const HistoryInfoArea = () => {
       </CardHeader>
       {currentHistory !== null ? (
         <CardContent className="flex flex-col gap-4 h-full overflow-auto">
-          <ImageArea
-            label="입차"
-            time={dayjs(currentHistory.entryTime).format("YYYY-MM-DD HH:mm:ss")}
-            url={currentHistory.entryImage}
-          />
+          <Dialog>
+            <DialogTrigger>
+              <ImageArea
+                label="입차"
+                time={dayjs(currentHistory.entryTime).format(
+                  "YYYY-MM-DD HH:mm:ss"
+                )}
+                url={currentHistory.entryImage}
+              />
+            </DialogTrigger>
+
+            <DialogContent className="lg:max-w-[60vw]">
+              <DialogHeader>
+                <DialogTitle>이미지</DialogTitle>
+              </DialogHeader>
+              <CustomCarousel urls={Images} />
+            </DialogContent>
+          </Dialog>
+
           {currentHistory.parkingState === ParkingState.출차 ? (
-            <ImageArea
-              label="출차"
-              time={dayjs(currentHistory.exitTime).format(
-                "YYYY-MM-DD HH:mm:ss"
-              )}
-              url={currentHistory.exitImage}
-            />
+            <Dialog>
+              <DialogTrigger>
+                <ImageArea
+                  label="출차"
+                  time={dayjs(currentHistory.exitTime).format(
+                    "YYYY-MM-DD HH:mm:ss"
+                  )}
+                  url={currentHistory.exitImage}
+                />
+              </DialogTrigger>
+
+              <DialogContent className="lg:max-w-[60vw]">
+                <DialogHeader>
+                  <DialogTitle>이미지</DialogTitle>
+                </DialogHeader>
+                <CustomCarousel urls={Images} />
+              </DialogContent>
+            </Dialog>
           ) : null}
           <CustomTextAreaForm
             key={currentHistory.id}
@@ -91,13 +132,3 @@ const HistoryInfoArea = () => {
 };
 
 export default HistoryInfoArea;
-
-const HistoryItem = ({ time, type }: { time: string; type: boolean }) => {
-  const backgroundColor = type ? "bg-blue-500" : "bg-destructive";
-  return (
-    <div className="flex justify-between">
-      <span>{time}</span>
-      <Badge className={`${backgroundColor}`}>{type ? "입차" : "출차"}</Badge>
-    </div>
-  );
-};
