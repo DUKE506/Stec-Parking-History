@@ -2,18 +2,17 @@ import { History } from "@prisma/client";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { ListBaseType, ListLoading, ListModel } from "@/types/list-type";
+import { useApiStore } from "./api-store";
+import { useFilterStore } from "./filter-store";
 
 interface HistoriesState {
   //입출차 목록
   histories: ListBaseType;
   //입출차 클릭항목
   currentHistory: History | null;
-  //View 사이즈
-  historyViewSize: number;
+
   //전체 사이즈
   historyTotalCount: number;
-  //현재페이지
-  activePage: number;
 
   setHistories: (newHistories: History[]) => void;
 
@@ -23,14 +22,8 @@ interface HistoriesState {
   //입출차 정보 비고 작성 핸들러
   setHistoryNote: (history: History) => void;
 
-  //view 사이즈 핸들러
-  setHistoryViewSize: (num: number) => void;
-
   //pagination
-  setPagination: (page: number) => Promise<void>;
-
-  //입출차 조회
-  fetchHistories: () => Promise<void>;
+  setPagination: () => Promise<void>;
 }
 
 export const useHistoryStore = create<HistoriesState>()(
@@ -38,9 +31,7 @@ export const useHistoryStore = create<HistoriesState>()(
     (set, get) => ({
       histories: ListLoading,
       currentHistory: null,
-      historyViewSize: 20,
       historyTotalCount: 0,
-      activePage: 1,
       setHistories: (newHistories) => set({ histories: newHistories }),
       setCurrentHistory: (selected) => {
         set({ currentHistory: selected });
@@ -56,51 +47,44 @@ export const useHistoryStore = create<HistoriesState>()(
           return;
         }
 
-        const page = get().activePage;
+        const page = useFilterStore.getState().page;
 
-        get().setPagination(page);
-      },
-      /**
-       * 입출차 이력 뷰 개수
-       * @param num
-       */
-      setHistoryViewSize: (num) => {
-        set({ historyViewSize: num });
-        const page = get().activePage;
-
-        get().setPagination(page);
+        get().setPagination();
       },
 
       /**
        * 입출차 이력 페이지네이션
        */
-      setPagination: async (page) => {
+      setPagination: async () => {
         set({ histories: ListLoading });
-        set({ activePage: page });
+
         //현재페이지
-        const curPage = get().activePage;
+        const curPage = useFilterStore.getState().page;
         //view개수
-        const viewSize = get().historyViewSize;
+        const viewSize = useFilterStore.getState().viewSize;
 
-        const res = await fetch(
-          `/api/history/pagination?page=${curPage}&viewSize=${viewSize}`
-        );
+        const baseUrl = useApiStore.getState().baseUrl;
+        const query = useApiStore.getState().queryParams;
+        //서버 변경시 base붙임
+        // const fullUrl = baseUrl + `?page=${curPage}&viewSize=${viewSize}` + query;
 
-        const data = await res.json();
-        console.log("스토어 결과 : ", data as ListModel<History>);
-        set({ historyTotalCount: data.meta.totalItemCount });
-        set({ histories: data });
+        let fullUrl = `/api/history/pagination?page=${curPage}&viewSize=${viewSize}`;
 
-        try {
-        } catch (err) {
-          console.error(err);
+        if (query) {
+          fullUrl = fullUrl + `&${query}`;
         }
-      },
-      fetchHistories: async () => {
+
+        // const res = await fetch(
+        //   `/api/history/pagination?page=${curPage}&viewSize=${viewSize}`
+        // );
+        const res = await fetch(fullUrl);
+
+        const getData = await res.json();
+
+        set({ historyTotalCount: getData.meta.totalItemCount });
+        set({ histories: getData.data as ListModel<History> });
+
         try {
-          const res = await fetch("/api/history");
-          const data = await res.json();
-          set({ histories: data.histories });
         } catch (err) {
           console.error(err);
         }

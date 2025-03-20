@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { gateLogTypeCheck } from "../../history/route";
 import { prisma } from "@/lib/_server/db";
 import { switchCarType } from "@/lib/utils";
-import { ParkingState } from "@prisma/client";
+import { CarType, ParkingState } from "@prisma/client";
 
 /**
  * 입차 데이터 밀어넣기
@@ -25,16 +25,17 @@ export async function POST(
   );
 
   console.log(results);
-
+  console.log(state);
   switch (state) {
-    case "IN":
+    case "입차":
       const histories = await Promise.all(
         body.map(async (history: any) => {
+          console.log(history.IN_TICKET_TP_NM as CarType);
           return await prisma.history.create({
             data: {
               parkingSeq: history.IO_SEQ,
-              carType: switchCarType(history.IN_TICKET_TP_NM),
-              parkingState: ParkingState.IN,
+              carType: history.IN_TICKET_TP_NM as CarType,
+              parkingState: ParkingState.입차,
               carNumber: history.CAR_NUM,
               entryTime: new Date(history.IN_DTM),
               exitTime: null,
@@ -109,7 +110,7 @@ export async function POST(
       });
 
       return NextResponse.json({ status: 200 });
-    case "OUT":
+    case "출차":
       return NextResponse.json({ status: 200 });
   }
 

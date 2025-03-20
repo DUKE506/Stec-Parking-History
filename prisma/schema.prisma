@@ -15,15 +15,15 @@ datasource db {
 
 // 차량 종류
 enum CarType {
-  VISIT // 방문차량
-  REGULAR // 정기차량
-  RESERVED // 예약차량
+  방문차량 // 방문차량
+  정기차량 // 정기차량
+  예약차량 // 예약차량
 }
 
 //주차상태
 enum ParkingState {
-  IN
-  OUT
+  입차
+  출차
 }
 
 model History {

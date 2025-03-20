@@ -1,12 +1,15 @@
 "use client";
-import { columns } from "./_components/custom-data-table/columns";
 import { DataTableArea } from "./_components/custom-data-table/custom-data-table";
 import FilterArea from "./_components/filter-area/filter-area";
 
 import HistoryInfoArea from "./_components/history-info-area/history-info-area";
 import Navigation from "./_components/nav/nav";
 
+import { useQuerySync } from "@/hooks/history_hooks";
+
 export default function Home() {
+  useQuerySync();
+
   return (
     <div className="h-dvh">
       <div className="flex flex-col w-full gap-10  h-full">

@@ -59,7 +59,7 @@ const HistoryInfoArea = () => {
             time={dayjs(currentHistory.entryTime).format("YYYY-MM-DD HH:mm:ss")}
             url={currentHistory.entryImage}
           />
-          {currentHistory.parkingState === ParkingState.OUT ? (
+          {currentHistory.parkingState === ParkingState.출차 ? (
             <ImageArea
               label="출차"
               time={dayjs(currentHistory.exitTime).format(

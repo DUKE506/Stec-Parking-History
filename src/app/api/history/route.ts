@@ -37,12 +37,12 @@ export async function POST(req: NextRequest) {
   }
 
   //입차
-  if (res === ParkingState.IN) {
+  if (res === ParkingState.입차) {
     const history = await prisma.history.create({
       data: {
         parkingSeq: body.IO_SEQ,
-        carType: switchCarType(body.IN_TICKET_TP_NM),
-        parkingState: ParkingState.IN,
+        carType: body.IN_TICKET_TP_NM as CarType,
+        parkingState: ParkingState.입차,
         carNumber: body.CAR_NUM,
         entryTime: new Date(body.IN_DTM),
         exitTime: null,
@@ -113,13 +113,13 @@ export async function POST(req: NextRequest) {
   }
 
   //출차
-  if (res === ParkingState.OUT) {
+  if (res === ParkingState.출차) {
     const history = await prisma.history.update({
       where: {
         parkingSeq: body.IO_SEQ,
       },
       data: {
-        parkingState: ParkingState.OUT,
+        parkingState: ParkingState.출차,
         exitTime: new Date(body.OUT_DTM),
         totalTime: body.PARK_DURATION,
         exitArea: body.OUT_GATE_NM,
@@ -193,11 +193,11 @@ export const gateLogTypeCheck = async (
 ): Promise<ParkingState | null> => {
   //입차
   if (schema.inGateLogSchema.safeParse(requestBody).success) {
-    return ParkingState.IN;
+    return ParkingState.입차;
   }
   //출차
   if (schema.outGateLogSchema.safeParse(requestBody).success) {
-    return ParkingState.OUT;
+    return ParkingState.출차;
   }
   return null;
 };

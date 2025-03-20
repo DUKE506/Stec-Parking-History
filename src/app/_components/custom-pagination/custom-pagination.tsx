@@ -1,9 +1,11 @@
+"use client";
 import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
 const Pagination = ({
@@ -15,15 +17,21 @@ const Pagination = ({
   viewSize,
   //보여줄페이지수
   pageRangeDisplayed,
-  //페이지 변경 핸들러
   onChange,
-}: {
+}: //페이지 변경 핸들러
+// onChange,
+{
   activePage: number;
   totalItemCount: number;
   viewSize: number;
   pageRangeDisplayed: number;
   onChange: (page: number) => void;
 }) => {
+  const searchParams = useSearchParams();
+  //현재 url 정보
+  const queryParams = new URLSearchParams(searchParams.toString());
+  //라우터
+  const router = useRouter();
   //pageRange기준 전체 페이지
   const allDisplayedPage = Math.ceil(totalItemCount / viewSize);
 
@@ -34,6 +42,15 @@ const Pagination = ({
     startPage + pageRangeDisplayed - 1,
     allDisplayedPage
   );
+
+  const pageHandler = ({ pageNumber }: { pageNumber: number }) => {
+    //데이터조회
+    onChange(pageNumber);
+    //URL 이동
+
+    queryParams.set("page", pageNumber.toString());
+    router.push(`?${queryParams.toString()}`);
+  };
 
   return (
     <div className="flex gap-2">
@@ -47,7 +64,7 @@ const Pagination = ({
             key={pageNum}
             page={pageNum}
             isActive={isActive}
-            onClick={() => onChange(pageNum)}
+            onClick={() => pageHandler({ pageNumber: pageNum })}
           />
         );
       })}

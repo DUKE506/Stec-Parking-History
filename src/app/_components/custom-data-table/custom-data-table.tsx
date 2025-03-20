@@ -33,27 +33,29 @@ import { ViewSize } from "@/types/history/histroy";
 import Pagination from "../custom-pagination/custom-pagination";
 import { ListLoading, ListModel } from "@/types/list-type";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from "next/navigation";
+import { useApiStore } from "@/stores/api-store";
+import { useFilterStore } from "@/stores/filter-store";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  // data: TData[];
 }
 
 const CustomDataTable = <TData, TValue>({
   columns,
-  data,
 }: // data,
+// data,
 DataTableProps<TData, TValue>) => {
   //입출차 목록 store
-  const { currentHistory, historyViewSize, setCurrentHistory } =
-    useHistoryStore();
+  const { histories, currentHistory, setCurrentHistory } = useHistoryStore();
+  const { viewSize } = useFilterStore();
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const table = useReactTable({
-    data: Array.isArray(data) ? data : [],
+    data: histories as TData[],
     columns,
     getCoreRowModel: getCoreRowModel(),
-    //Sorting --
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -62,10 +64,9 @@ DataTableProps<TData, TValue>) => {
     },
     initialState: {
       pagination: {
-        pageSize: historyViewSize,
+        pageSize: viewSize,
       },
     },
-    //Sorting --
   });
 
   return (
@@ -124,18 +125,22 @@ DataTableProps<TData, TValue>) => {
 };
 
 export const DataTableArea = ({ title }: { title: string }) => {
-  const {
-    histories,
-    activePage,
-    historyTotalCount,
-    historyViewSize,
-    setHistoryViewSize,
-    setPagination,
-  } = useHistoryStore();
+  const router = useRouter();
+  const { histories, historyTotalCount } = useHistoryStore();
 
-  useEffect(() => {
-    setPagination(activePage);
-  }, []);
+  const { page, viewSize, setPage, setViewSize } = useFilterStore();
+
+  const { queryParams } = useApiStore();
+
+  //view 개수 변경 핸들러
+  const onSelectViewNum = (value: any) => {
+    const params = new URLSearchParams(queryParams);
+    params.set("viewSize", value);
+    params.set("page", "1");
+    setPage(1);
+    setViewSize(value);
+    router.push(`?${params}`);
+  };
 
   return (
     <div className="container max-w-full flex-3 ">
@@ -143,42 +148,43 @@ export const DataTableArea = ({ title }: { title: string }) => {
         <CardHeader className="p-0">
           <CardTitle className="text-lg">{title}</CardTitle>
         </CardHeader>
+        <CardDescription>
+          <div className="flex justify-end gap-4 items-center">
+            {/* <span>total : {historyTotalCount}</span> */}
+            <div className="flex gap-6">
+              {
+                //페이지수가 1개이면 안보이개
+                Math.ceil(historyTotalCount / viewSize) <= 1 ? null : (
+                  <Pagination
+                    activePage={page}
+                    totalItemCount={historyTotalCount}
+                    viewSize={viewSize}
+                    pageRangeDisplayed={5}
+                    onChange={setPage}
+                  />
+                )
+              }
+
+              <CustomSelect
+                className="w-20"
+                values={ViewSize}
+                defaultValue={viewSize}
+                onChange={onSelectViewNum}
+              />
+            </div>
+          </div>
+        </CardDescription>
+
         {histories === ListLoading ? (
           <div className="flex flex-col gap-6 h-full">
-            <div className="flex justify-end">
-              <Skeleton className=" h-9 w-[350px] rounded-xl bg-input" />
-            </div>
             <Skeleton className="h-full w-full rounded-xl bg-input" />
           </div>
         ) : (
-          <>
-            <CardDescription>
-              <div className="flex justify-end gap-4">
-                <Pagination
-                  activePage={activePage}
-                  totalItemCount={historyTotalCount}
-                  viewSize={historyViewSize}
-                  pageRangeDisplayed={5}
-                  onChange={setPagination}
-                />
-                <CustomSelect
-                  className="w-20"
-                  values={ViewSize}
-                  defaultValue={historyViewSize}
-                  onChange={setHistoryViewSize}
-                />
-              </div>
-            </CardDescription>
-
-            <CardContent className="p-0 h-full gap-2 overflow-hidden">
-              <div className="rounded-md border h-full overflow-y-auto">
-                <CustomDataTable
-                  columns={columns}
-                  data={(histories as ListModel<History>).data}
-                />
-              </div>
-            </CardContent>
-          </>
+          <CardContent className="p-0 h-full gap-2 overflow-hidden">
+            <div className="rounded-md border h-full overflow-y-auto">
+              <CustomDataTable columns={columns} />
+            </div>
+          </CardContent>
         )}
       </Card>
     </div>

@@ -28,10 +28,6 @@ export const columns: ColumnDef<History>[] = [
   {
     accessorKey: "carType",
     header: () => <div className="text-center">입출유형</div>,
-    cell: ({ row }) => {
-      const value = row.getValue("carType") as CarType;
-      return switchCarTypeKR(value);
-    },
   },
   {
     accessorKey: "parkingState",
@@ -40,10 +36,10 @@ export const columns: ColumnDef<History>[] = [
       const value = row.getValue("parkingState") as ParkingState;
       let backgroundColor = "bg-muted-foreground";
       switch (value) {
-        case ParkingState.IN:
+        case ParkingState.입차:
           backgroundColor = "bg-blue-500";
           break;
-        case ParkingState.OUT:
+        case ParkingState.출차:
           backgroundColor = "bg-destructive";
           break;
       }

@@ -1,4 +1,9 @@
-import { CarUnionType, ParkingStateUnionType } from "@/types/history/histroy";
+import {
+  CarType,
+  CarUnionType,
+  ParkingStateUnionType,
+  ViewSize,
+} from "@/types/history/histroy";
 import { devtools } from "zustand/middleware";
 import { create } from "zustand";
 
@@ -8,82 +13,155 @@ interface FilterState {
   //주차상태
   parkingState: ParkingStateUnionType | null;
   //차량번호
-  carNumber: string | null;
+  carNumber: string;
   //기간
   startDate: Date | null;
   endDate: Date | null;
   //동
-  dong: string | null;
+  dong: string;
   //호
-  ho: string | null;
-
+  ho: string;
+  //페이지
+  page: number;
+  //view수
+  viewSize: number;
   setCarType: (type: CarUnionType) => void;
   setParkingState: (state: ParkingStateUnionType) => void;
-  setCarNumber: (number: string) => void;
+  setCarNumber: (number: string | null) => void;
   setStartDate: (start: Date) => void;
   setEndDate: (end: Date) => void;
-  setDong: (dong: string) => void;
-  setHo: (ho: string) => void;
+  setDong: (dong: string | null) => void;
+  setHo: (ho: string | null) => void;
+  setPage: (page: number | null) => void;
+  setViewSize: (num: number | null) => void;
+  setFilterReset: () => void;
 }
 
 export const useFilterStore = create<FilterState>()(
-  devtools((set, get) => ({
-    carType: null,
-    parkingState: null,
-    carNumber: null,
-    startDate: null,
-    endDate: null,
-    dong: null,
-    ho: null,
-    setCarType: (type) => {
-      if (type === "전체") {
-        set({ parkingState: null });
-        return;
-      }
+  devtools(
+    (set, get) => ({
+      carType: null,
+      parkingState: null,
+      carNumber: "",
+      startDate: null,
+      endDate: null,
+      dong: "",
+      ho: "",
+      page: 1,
+      viewSize: 20,
+      /**
+       * 차량 구분
+       * @param type
+       * @returns
+       */
+      setCarType: (type) => {
+        if (type === CarType.ALL) {
+          set({ carType: null });
+          return;
+        }
 
-      console.log("타입 변경 : ", type);
-      set({ carType: type });
-    },
-    setParkingState: (state) => {
-      if (state === "전체") {
-        set({ parkingState: null });
-        return;
-      }
-      console.log("주차상태 변경 : ", state);
-      set({ parkingState: state });
-    },
-    setCarNumber: (number) => {
-      if (number === null) {
-        set({ carNumber: null });
-        return;
-      }
+        set({ carType: type });
+      },
+      /**
+       * 입출차 상태
+       * @param state
+       * @returns
+       */
+      setParkingState: (state) => {
+        if (state === "전체") {
+          set({ parkingState: null });
+          return;
+        }
 
-      console.log("차량번호 변경 : ", number);
-      set({ carNumber: number });
-    },
-    setStartDate: (start) => {
-      console.log("시작날짜 변경 : ", start);
-    },
-    setEndDate: (end) => {
-      console.log("끝날짜 변경 : ", end);
-    },
-    setDong: (dong) => {
-      if (dong === null) {
-        set({ dong: null });
-        return;
-      }
+        set({ parkingState: state });
+      },
+      /**
+       * 차량번호
+       * @param number
+       * @returns
+       */
+      setCarNumber: (number) => {
+        if (number === null) {
+          set({ carNumber: "" });
+          return;
+        }
 
-      console.log("동 변경 : ", dong);
-      set({ dong: dong });
-    },
-    setHo: (ho) => {
-      if (ho === null) {
-        set({ ho: null });
-        return;
-      }
+        set({ carNumber: number });
+      },
+      /**
+       * 시작 기간
+       * @param start
+       */
+      setStartDate: (start) => {
+        console.log("시작날짜 변경 : ", start);
+      },
+      /**
+       * 종료 기간
+       * @param end
+       */
+      setEndDate: (end) => {
+        console.log("끝날짜 변경 : ", end);
+      },
+      /**
+       * 동
+       * @param dong
+       * @returns
+       */
+      setDong: (dong) => {
+        if (dong === null) {
+          set({ dong: "" });
+          return;
+        }
 
-      set({ ho: ho });
-      console.log("호 변경 : ", ho);
-    },
-  }))
+        set({ dong: dong });
+      },
+      /**
+       * 호
+       * @param ho
+       * @returns
+       */
+      setHo: (ho) => {
+        if (ho === null) {
+          set({ ho: "" });
+          return;
+        }
+
+        set({ ho: ho });
+      },
+      /**
+       * 현재 페이지
+       * @param page
+       */
+      setPage: (page) => {
+        if (!page) {
+          set({ page: 1 });
+        } else {
+          set({ page: page });
+        }
+      },
+      /**
+       * 뷰 개수
+       * @param num
+       */
+      setViewSize: (num) => {
+        if (!num) {
+          set({ viewSize: 20 });
+        } else {
+          set({ viewSize: num });
+        }
+      },
+      setFilterReset: () => {
+        set({
+          carType: null,
+          parkingState: null,
+          carNumber: "",
+          dong: "",
+          ho: "",
+          page: 1,
+          viewSize: 20,
+        });
+      },
+    }),
+    { name: "filter-store" }
+  )
 );
