@@ -6,6 +6,8 @@ import {
 } from "@/types/history/histroy";
 import { devtools } from "zustand/middleware";
 import { create } from "zustand";
+import { DateRange } from "react-day-picker";
+import { subDays } from "date-fns";
 
 interface FilterState {
   //입출유형
@@ -15,6 +17,7 @@ interface FilterState {
   //차량번호
   carNumber: string;
   //기간
+  duration: DateRange | null;
   startDate: Date | null;
   endDate: Date | null;
   //동
@@ -28,6 +31,7 @@ interface FilterState {
   setCarType: (type: CarUnionType) => void;
   setParkingState: (state: ParkingStateUnionType) => void;
   setCarNumber: (number: string | null) => void;
+  setDuration: (duration: DateRange | null) => void;
   setStartDate: (start: Date) => void;
   setEndDate: (end: Date) => void;
   setDong: (dong: string | null) => void;
@@ -43,8 +47,7 @@ export const useFilterStore = create<FilterState>()(
       carType: null,
       parkingState: null,
       carNumber: "",
-      startDate: null,
-      endDate: null,
+      duration: null,
       dong: "",
       ho: "",
       page: 1,
@@ -87,6 +90,11 @@ export const useFilterStore = create<FilterState>()(
         }
 
         set({ carNumber: number });
+      },
+      setDuration: (duration) => {
+        console.log("기간 : ", duration);
+        if (duration) set({ duration: duration });
+        else set({ duration: null });
       },
       /**
        * 시작 기간
@@ -155,6 +163,7 @@ export const useFilterStore = create<FilterState>()(
           carType: null,
           parkingState: null,
           carNumber: "",
+          duration: null,
           dong: "",
           ho: "",
           page: 1,

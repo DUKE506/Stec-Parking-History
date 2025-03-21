@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -35,8 +36,10 @@ const CustomSheet = ({
   return (
     <Sheet key={side}>
       <SheetTrigger asChild onClick={onClick}>
-        <div className="flex gap-1">
-          <Label className="text-xs">{label ?? "더보기"}</Label>
+        <div className="flex gap-1 hover:cursor-pointer">
+          <Label className="text-xs hover:cursor-pointer">
+            {label ?? "더보기"}
+          </Label>
           <LucideIcon name="ArrowRight" size={16} />
         </div>
       </SheetTrigger>

@@ -43,7 +43,7 @@ export const CustomSelect = <T extends EnumType>({
         value={defaultValue?.toString()}
       >
         {/* <SelectTrigger className="w-[180px]"> */}
-        <SelectTrigger className="w-full">
+        <SelectTrigger className="w-full hover:cursor-pointer">
           <SelectValue placeholder="선택" />
         </SelectTrigger>
         <SelectContent>

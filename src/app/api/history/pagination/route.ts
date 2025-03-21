@@ -20,6 +20,51 @@ export async function GET(req: NextRequest) {
   const carNumber = searchParams.get("carNumber") ?? null;
   const dong = searchParams.get("dong") ?? null;
   const ho = searchParams.get("ho") ?? null;
+  const start = searchParams.get("startDate") ?? null;
+  const end = searchParams.get("endDate") ?? null;
+  let startDate = null;
+  let endDate = null;
+  if (start) startDate = new Date(start);
+  if (end) endDate = new Date(end);
+
+  let dateWhere = {};
+
+  if (start && end) {
+    console.log("시작");
+    if (parkingState == null) {
+      console.log("1");
+      dateWhere = {
+        OR: [
+          {
+            entryTime: {
+              gte: startDate,
+              lte: endDate,
+            },
+            exitTime: {
+              gte: startDate,
+              lte: endDate,
+            },
+          },
+        ],
+      };
+    } else if (parkingState === "입차") {
+      console.log("2");
+      dateWhere = {
+        entryTime: {
+          gte: startDate,
+          lte: endDate,
+        },
+      };
+    } else if (parkingState === "출차") {
+      console.log("3");
+      dateWhere = {
+        entryTime: {
+          gte: startDate,
+          lte: endDate,
+        },
+      };
+    }
+  }
 
   const [data, totalCount] = await prisma.$transaction([
     prisma.history.findMany({
@@ -33,6 +78,7 @@ export async function GET(req: NextRequest) {
         }),
         ...(dong && { dong }),
         ...(ho && { ho }),
+        ...dateWhere,
       },
       skip: (page - 1) * viewSize,
       take: viewSize,
@@ -44,6 +90,7 @@ export async function GET(req: NextRequest) {
         ...(carNumber && { carNumber }),
         ...(dong && { dong }),
         ...(ho && { ho }),
+        ...dateWhere,
       },
     }),
   ]);

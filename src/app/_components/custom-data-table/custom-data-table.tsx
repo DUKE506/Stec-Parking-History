@@ -36,6 +36,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import { useApiStore } from "@/stores/api-store";
 import { useFilterStore } from "@/stores/filter-store";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
+import { onHistoryExportData } from "@/hooks/excel_hooks";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -142,6 +145,15 @@ export const DataTableArea = ({ title }: { title: string }) => {
     router.push(`?${params}`);
   };
 
+  const onExport = async () => {
+    console.log("익스포트");
+    await onHistoryExportData({
+      title: "입출차이력",
+      worksheetname: "입출차이력",
+      datas: histories,
+    });
+  };
+
   return (
     <div className="container max-w-full flex-3 ">
       <Card className="p-8 h-full">
@@ -149,10 +161,21 @@ export const DataTableArea = ({ title }: { title: string }) => {
           <CardTitle className="text-lg">{title}</CardTitle>
         </CardHeader>
         <CardDescription>
-          <div className="flex justify-end gap-4 items-center">
-            {/* <span>total : {historyTotalCount}</span> */}
+          <div className="flex justify-between gap-4 items-center">
+            {
+              //페이지수가 1개이면 안보이개
+              Math.ceil(historyTotalCount / viewSize) <= 1 ? null : (
+                <Pagination
+                  activePage={page}
+                  totalItemCount={historyTotalCount}
+                  viewSize={viewSize}
+                  pageRangeDisplayed={5}
+                  onChange={setPage}
+                />
+              )
+            }
             <div className="flex gap-6">
-              {
+              {/* {
                 //페이지수가 1개이면 안보이개
                 Math.ceil(historyTotalCount / viewSize) <= 1 ? null : (
                   <Pagination
@@ -163,7 +186,7 @@ export const DataTableArea = ({ title }: { title: string }) => {
                     onChange={setPage}
                   />
                 )
-              }
+              } */}
 
               <CustomSelect
                 className="w-20"
@@ -171,6 +194,12 @@ export const DataTableArea = ({ title }: { title: string }) => {
                 defaultValue={viewSize}
                 onChange={onSelectViewNum}
               />
+              {historyTotalCount < 1 ? null : (
+                <Button className="cursor-pointer" onClick={onExport}>
+                  <Download />
+                  <span>Excel</span>
+                </Button>
+              )}
             </div>
           </div>
         </CardDescription>

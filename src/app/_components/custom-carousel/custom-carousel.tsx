@@ -32,8 +32,8 @@ export const CustomCarousel = ({ urls }: { urls: string[] }) => {
           ))}
         </CarouselContent>
 
-        <CarouselPrevious className="left-6" />
-        <CarouselNext className="right-6" />
+        <CarouselPrevious className="left-6 cursor-pointer" />
+        <CarouselNext className="right-6 cursor-pointer" />
       </Carousel>
     </div>
   );

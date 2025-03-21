@@ -20,11 +20,13 @@ const FilterArea = () => {
     carType,
     parkingState,
     carNumber,
+    duration,
     dong,
     ho,
     setCarType,
     setParkingState,
     setCarNumber,
+    setDuration,
     setStartDate,
     setEndDate,
     setDong,
@@ -39,6 +41,9 @@ const FilterArea = () => {
     if (carType) queryParams.append("carType", carType);
     if (parkingState) queryParams.append("parkingState", parkingState);
     if (carNumber) queryParams.append("carNumber", carNumber);
+    if (duration?.from)
+      queryParams.append("startDate", duration.from.toString());
+    if (duration?.to) queryParams.append("endDate", duration.to.toString());
     if (dong) queryParams.append("dong", dong);
     if (ho) queryParams.append("ho", ho);
     setPage(1);
@@ -78,11 +83,18 @@ const FilterArea = () => {
             value={carNumber}
             onChange={setCarNumber}
           />
-          <DatePickerWithRange label="기간" />
+          <DatePickerWithRange
+            label="기간"
+            option={true}
+            values={duration}
+            onChange={setDuration}
+          />
           <CustomInput label="동" value={dong} onChange={setDong} />
           <CustomInput label="호" value={ho} onChange={setHo} />
           <div className="flex items-center">
-            <Button onClick={onSearch}>조회</Button>
+            <Button className="hover:cursor-pointer" onClick={onSearch}>
+              조회
+            </Button>
           </div>
         </CardContent>
       </Card>

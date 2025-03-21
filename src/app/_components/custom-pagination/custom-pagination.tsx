@@ -1,4 +1,5 @@
 "use client";
+import { PageActionState, PageActionUnionType } from "@/types/history/histroy";
 import {
   ChevronLeft,
   ChevronRight,
@@ -52,10 +53,51 @@ const Pagination = ({
     router.push(`?${queryParams.toString()}`);
   };
 
+  /**
+   *
+   */
+  const onPageHandle = (value: PageActionUnionType) => {
+    console.log(value);
+    switch (value) {
+      case PageActionState.FirstPage:
+        pageHandler({ pageNumber: startPage });
+        break;
+      case PageActionState.PrevPage:
+        if (activePage - 1 != 0) pageHandler({ pageNumber: activePage - 1 });
+        else pageHandler({ pageNumber: 1 });
+        break;
+      case PageActionState.NextPage:
+        if (activePage + 1 <= endPage) {
+          pageHandler({ pageNumber: activePage + 1 });
+          break;
+        } else {
+          pageHandler({ pageNumber: endPage });
+          break;
+        }
+
+      case PageActionState.LastPage:
+        pageHandler({ pageNumber: endPage });
+        break;
+    }
+    // if (!value) {
+    //   if (activePage - 1 != 0) activePage = activePage - 1;
+    //   else activePage = 1;
+    // } else {
+    //   if (activePage + 1 > endPage) activePage = endPage;
+    //   else activePage = activePage + 1;
+    // }
+  };
+
   return (
     <div className="flex gap-2">
-      <PageActionButton icon={ChevronsLeft} />
-      <PageActionButton icon={ChevronLeft} />
+      <PageActionButton
+        icon={ChevronsLeft}
+        onClick={() => onPageHandle(PageActionState.FirstPage)}
+      />
+      <PageActionButton
+        icon={ChevronLeft}
+        onClick={() => onPageHandle(PageActionState.PrevPage)}
+      />
       {Array.from({ length: endPage - startPage + 1 }).map((_, idx) => {
         const pageNum = startPage + idx;
         const isActive = activePage === pageNum;
@@ -68,8 +110,14 @@ const Pagination = ({
           />
         );
       })}
-      <PageActionButton icon={ChevronRight} />
-      <PageActionButton icon={ChevronsRight} />
+      <PageActionButton
+        icon={ChevronRight}
+        onClick={() => onPageHandle(PageActionState.NextPage)}
+      />
+      <PageActionButton
+        icon={ChevronsRight}
+        onClick={() => onPageHandle(PageActionState.LastPage)}
+      />
     </div>
   );
 };
@@ -97,11 +145,16 @@ const PageItemButton = ({
 
 const PageActionButton = ({
   icon: Icon,
+  onClick,
 }: {
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  onClick: () => void;
 }) => {
   return (
-    <div className="border px-2 py-2 rounded-md w-9 h-9 flex items-center justify-center hover:bg-accent cursor-pointer">
+    <div
+      className="border px-2 py-2 rounded-md w-9 h-9 flex items-center justify-center hover:bg-accent cursor-pointer"
+      onClick={onClick}
+    >
       <Icon />
     </div>
   );

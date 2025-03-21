@@ -21,6 +21,7 @@ export function useQuerySync() {
     setCarNumber,
     setStartDate,
     setEndDate,
+    setDuration,
     setDong,
     setHo,
     setPage,
@@ -38,6 +39,11 @@ export function useQuerySync() {
         ParkingState.ALL
     );
     setCarNumber(searchParams.get("carNumber") ?? "");
+
+    const from = searchParams.get("startDate") ?? "";
+    const to = searchParams.get("endDate") ?? "";
+    setDuration({ from: new Date(from) ?? null, to: new Date(to) ?? null });
+
     setDong(searchParams.get("dong") ?? "");
     setHo(searchParams.get("ho") ?? "");
 

@@ -1,28 +1,10 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { switchCarTypeKR } from "@/lib/utils";
 import { CarType, History, ParkingState } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Check, Circle } from "lucide-react";
 import dayjs from "dayjs";
-
-export type ParkingHistory = {
-  id: string;
-  carType: string;
-  parkingType: string;
-  carNumber: string;
-  entryTime: string;
-  exitTime: string | null;
-  totalTime: string | null;
-  parkingAreaName: string | null;
-  entryArea: string;
-  exitArea: string | null;
-  dong: string | null;
-  ho: string | null;
-  isBlack: boolean;
-  note: string | null;
-};
 
 export const columns: ColumnDef<History>[] = [
   {

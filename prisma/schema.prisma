@@ -103,3 +103,15 @@ model GateLog {
   history          History? @relation(fields: [historyId], references: [id])
   historyId        Int?
 }
+
+model Patrol{
+  id Int      @id @default(autoincrement())
+  parkId String
+  userName String
+  time String
+  code Int
+  codeName String
+  img String?
+  carNumber String
+  note String
+}

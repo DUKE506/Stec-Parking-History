@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
-import { Badge } from "@/components/ui/badge";
 import CustomSheet from "../custom-sheet/custom-sheet";
 import { useHistoryStore } from "@/stores/histories-store";
 import { ParkingState } from "@prisma/client";
@@ -77,7 +76,7 @@ const HistoryInfoArea = () => {
       {currentHistory !== null ? (
         <CardContent className="flex flex-col gap-4 h-full overflow-auto">
           <Dialog>
-            <DialogTrigger>
+            <DialogTrigger className="hover:cursor-pointer">
               <ImageArea
                 label="입차"
                 time={dayjs(currentHistory.entryTime).format(
@@ -97,7 +96,7 @@ const HistoryInfoArea = () => {
 
           {currentHistory.parkingState === ParkingState.출차 ? (
             <Dialog>
-              <DialogTrigger>
+              <DialogTrigger className="hover:cursor-pointer">
                 <ImageArea
                   label="출차"
                   time={dayjs(currentHistory.exitTime).format(
