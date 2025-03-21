@@ -18,8 +18,7 @@ interface FilterState {
   carNumber: string;
   //기간
   duration: DateRange | null;
-  startDate: Date | null;
-  endDate: Date | null;
+
   //동
   dong: string;
   //호
@@ -32,8 +31,6 @@ interface FilterState {
   setParkingState: (state: ParkingStateUnionType) => void;
   setCarNumber: (number: string | null) => void;
   setDuration: (duration: DateRange | null) => void;
-  setStartDate: (start: Date) => void;
-  setEndDate: (end: Date) => void;
   setDong: (dong: string | null) => void;
   setHo: (ho: string | null) => void;
   setPage: (page: number | null) => void;
@@ -95,20 +92,6 @@ export const useFilterStore = create<FilterState>()(
         console.log("기간 : ", duration);
         if (duration) set({ duration: duration });
         else set({ duration: null });
-      },
-      /**
-       * 시작 기간
-       * @param start
-       */
-      setStartDate: (start) => {
-        console.log("시작날짜 변경 : ", start);
-      },
-      /**
-       * 종료 기간
-       * @param end
-       */
-      setEndDate: (end) => {
-        console.log("끝날짜 변경 : ", end);
       },
       /**
        * 동

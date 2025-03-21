@@ -1,8 +1,9 @@
 "use client";
-import { DataTableArea } from "./_components/custom-data-table/custom-data-table";
+
 import FilterArea from "./_components/filter-area/filter-area";
 
 import HistoryInfoArea from "./_components/history-info-area/history-info-area";
+import { DataTableArea } from "./_components/history-table-area/history-table-area";
 import Navigation from "./_components/nav/nav";
 
 import { useQuerySync } from "@/hooks/history_hooks";

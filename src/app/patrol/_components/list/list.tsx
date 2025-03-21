@@ -3,6 +3,8 @@ import CustomDataTable from "@/app/_components/custom-data-table/custom-data-tab
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
 import { columns } from "../data-table/columns";
+import { ViewSize } from "@/types/history/histroy";
+import { Patrol } from "@prisma/client";
 
 const List = () => {
   return (
@@ -13,7 +15,12 @@ const List = () => {
 
       <CardContent className="">
         <div className="rounded-md border h-full overflow-y-auto">
-          <CustomDataTable columns={columns} />
+          <CustomDataTable<Patrol, any>
+            columns={columns}
+            data={[]}
+            onClickRow={() => {}}
+            viewSize={20}
+          />
         </div>
       </CardContent>
     </Card>

@@ -11,10 +11,8 @@ interface HistoriesState {
   //입출차 클릭항목
   currentHistory: History | null;
 
-  //전체 사이즈
+  //전체 데이터 수수
   historyTotalCount: number;
-
-  setHistories: (newHistories: History[]) => void;
 
   //입출차 클릭 핸들러
   setCurrentHistory: (selected: History | null) => void;
@@ -32,7 +30,6 @@ export const useHistoryStore = create<HistoriesState>()(
       histories: ListLoading,
       currentHistory: null,
       historyTotalCount: 0,
-      setHistories: (newHistories) => set({ histories: newHistories }),
       setCurrentHistory: (selected) => {
         set({ currentHistory: selected });
       },
@@ -82,7 +79,7 @@ export const useHistoryStore = create<HistoriesState>()(
         const getData = await res.json();
 
         set({ historyTotalCount: getData.meta.totalItemCount });
-        set({ histories: getData.data as ListModel<History> });
+        set({ histories: getData as ListModel<History> });
 
         try {
         } catch (err) {

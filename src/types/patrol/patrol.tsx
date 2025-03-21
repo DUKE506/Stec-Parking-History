@@ -16,4 +16,5 @@ export const PatrolState = {
   BLACK: "위반",
 };
 
-export type PatrolUnionType = (typeof PatrolState)[keyof typeof PatrolState];
+export type PatrolStateUnionType =
+  (typeof PatrolState)[keyof typeof PatrolState];

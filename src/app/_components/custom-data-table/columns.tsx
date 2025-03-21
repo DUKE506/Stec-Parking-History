@@ -1,7 +1,7 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CarType, History, ParkingState } from "@prisma/client";
+import { History, ParkingState } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Check, Circle } from "lucide-react";
 import dayjs from "dayjs";
