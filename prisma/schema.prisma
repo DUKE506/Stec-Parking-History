@@ -26,6 +26,13 @@ enum ParkingState {
   출차
 }
 
+enum PatrolState {
+  블랙리스트
+  입주민
+  방문객
+  순찰
+}
+
 model History {
   id              Int          @id @default(autoincrement())
   parkingSeq      String       @unique
@@ -110,7 +117,7 @@ model Patrol{
   userName String
   time String
   code Int
-  codeName String
+  codeName PatrolState
   img String?
   carNumber String
   note String

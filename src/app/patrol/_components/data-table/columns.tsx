@@ -1,4 +1,6 @@
-import { Patrol } from "@prisma/client";
+import { Badge } from "@/components/ui/badge";
+import { PatrolStateUnionType } from "@/types/patrol/patrol";
+import { Patrol, PatrolState } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 
 export const columns: ColumnDef<Patrol>[] = [
@@ -15,7 +17,26 @@ export const columns: ColumnDef<Patrol>[] = [
     header: () => <div className="text-center">상태</div>,
     cell: ({ row }) => {
       const cellData = row.original.codeName;
-      return <div className="text-center">{cellData}</div>;
+      let backgroundColor = "bg-muted-foreground";
+      switch (cellData as PatrolState) {
+        case PatrolState.블랙리스트:
+          backgroundColor = "bg-destructive";
+          break;
+        case PatrolState.방문객:
+          backgroundColor = "bg-blue-500";
+          break;
+        case PatrolState.입주민:
+          backgroundColor = "bg-green-500";
+          break;
+        case PatrolState.순찰:
+          backgroundColor = "bg-purple-500";
+          break;
+      }
+      return (
+        <div className="text-center">
+          <Badge className={`${backgroundColor}`}>{cellData}</Badge>
+        </div>
+      );
     },
   },
   {
@@ -34,14 +55,14 @@ export const columns: ColumnDef<Patrol>[] = [
       return <div className="text-center">{cellData}</div>;
     },
   },
-  {
-    accessorKey: "img",
-    header: () => <div className="text-center">이미지</div>,
-    cell: ({ row }) => {
-      const cellData = row.original.img;
-      return <div className="text-center">{cellData}</div>;
-    },
-  },
+  // {
+  //   accessorKey: "img",
+  //   header: () => <div className="text-center">이미지</div>,
+  //   cell: ({ row }) => {
+  //     const cellData = row.original.img;
+  //     return <div className="text-center">{cellData}</div>;
+  //   },
+  // },
   {
     accessorKey: "note",
     header: () => <div className="text-center">비고</div>,

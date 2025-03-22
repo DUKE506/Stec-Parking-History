@@ -12,6 +12,8 @@ interface PatrolFilterState {
   setState: (state: PatrolStateUnionType) => void;
   setDuration: (duration: DateRange | null) => void;
   setCarNumber: (carNumber: string | null) => void;
+  setPage: (page: number | null) => void;
+  setViewSize: (viewSize: number | null) => void;
 }
 
 export const usePatrolFilterStore = create<PatrolFilterState>()(
@@ -47,6 +49,28 @@ export const usePatrolFilterStore = create<PatrolFilterState>()(
      */
     setCarNumber: (carNumber) => {
       if (carNumber) set({ carNumber: carNumber });
+    },
+    /**
+     * 현재 페이지
+     * @param page
+     */
+    setPage: (page) => {
+      if (!page) {
+        set({ page: 1 });
+      } else {
+        set({ page: page });
+      }
+    },
+    /**
+     * 뷰 개수
+     * @param num
+     */
+    setViewSize: (num) => {
+      if (!num) {
+        set({ viewSize: 20 });
+      } else {
+        set({ viewSize: num });
+      }
     },
   }))
 );

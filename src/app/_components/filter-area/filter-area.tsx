@@ -27,8 +27,6 @@ const FilterArea = () => {
     setParkingState,
     setCarNumber,
     setDuration,
-    setStartDate,
-    setEndDate,
     setDong,
     setHo,
     setPage,

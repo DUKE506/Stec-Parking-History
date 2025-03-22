@@ -5,8 +5,11 @@ import React from "react";
 import { columns } from "../data-table/columns";
 import { ViewSize } from "@/types/history/histroy";
 import { Patrol } from "@prisma/client";
+import { usePatrolStore } from "@/stores/patrol-store";
+import { ListModel } from "@/types/list-type";
 
 const List = () => {
+  const { patrol } = usePatrolStore();
   return (
     <Card className="w-full">
       <CardHeader>
@@ -17,7 +20,7 @@ const List = () => {
         <div className="rounded-md border h-full overflow-y-auto">
           <CustomDataTable<Patrol, any>
             columns={columns}
-            data={[]}
+            data={(patrol as ListModel<Patrol>).data}
             onClickRow={() => {}}
             viewSize={20}
           />
