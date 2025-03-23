@@ -36,10 +36,21 @@ const DatePickerWithRange = ({
   });
 
   useEffect(() => {
+    if (values === null) {
+      setSwitch(false);
+      setDate({
+        from: subDays(new Date(Date.now()), 20),
+        to: new Date(Date.now()),
+      });
+      return;
+    }
     setDate(date);
-
-    if (isValidDate(values?.from)) {
+    if (isValidDate(values?.from) && isValidDate(values?.to)) {
       setSwitch(true);
+      setDate({
+        from: values?.from,
+        to: values?.to,
+      });
     }
   }, [values]);
 
@@ -126,13 +137,6 @@ const DatePickerWithRange = ({
               mode="range"
               defaultMonth={date?.from}
               selected={date}
-              // selected={
-              //   date ?? {
-              //     from: subDays(new Date(Date.now()), 20),
-              //     to: new Date(Date.now()),
-              //   }
-              // }
-              // onSelect={setDate}
               onSelect={(e) => onSelectedDate(e)}
               numberOfMonths={2}
             />

@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { onHistoryExportData } from "@/hooks/excel_hooks";
+import { onHistoryExportData } from "@/hooks/history/excel_hooks";
 import { useApiStore } from "@/stores/api-store";
 import { useFilterStore } from "@/stores/filter-store";
 import { useHistoryStore } from "@/stores/histories-store";
@@ -20,7 +20,7 @@ import { ViewSize } from "@/types/history/histroy";
 import { ListLoading, ListModel } from "@/types/list-type";
 import { columns } from "../custom-data-table/columns";
 import { History } from "@prisma/client";
-
+import { useEffect, useState } from "react";
 
 export const DataTableArea = ({ title }: { title: string }) => {
   const router = useRouter();
@@ -29,6 +29,27 @@ export const DataTableArea = ({ title }: { title: string }) => {
   const { page, viewSize, setPage, setViewSize } = useFilterStore();
 
   const { queryParams } = useApiStore();
+
+  const [isPagination, setIsPagination] = useState<boolean>(false);
+
+  useEffect(() => {
+    //로딩중
+    if (histories === ListLoading) {
+      return;
+    }
+    if (histories !== ListLoading) {
+      if (
+        Math.ceil(
+          (histories as ListModel<History>).meta.totalItemCount / viewSize
+        ) > 1
+      ) {
+        setIsPagination(true);
+        return;
+      }
+      setIsPagination(false);
+      return;
+    }
+  }, [histories, viewSize]);
 
   //view 개수 변경 핸들러
   const onSelectViewNum = (value: any) => {
@@ -54,20 +75,23 @@ export const DataTableArea = ({ title }: { title: string }) => {
         <CardHeader className="p-0">
           <CardTitle className="text-lg">{title}</CardTitle>
         </CardHeader>
-        <CardDescription>
-          <div className="flex justify-between gap-4 items-center">
-            {
-              //페이지수가 1개이면 안보이개
-              Math.ceil(historyTotalCount / viewSize) <= 1 ? null : (
-                <Pagination
-                  activePage={page}
-                  totalItemCount={historyTotalCount}
-                  viewSize={viewSize}
-                  pageRangeDisplayed={5}
-                  onChange={setPage}
-                />
-              )
-            }
+        <CardDescription className={`flex justify-between `}>
+          {histories === ListLoading ? (
+            <Skeleton className="h-9 w-80" />
+          ) : isPagination ? (
+            <Pagination
+              activePage={page}
+              totalItemCount={historyTotalCount}
+              viewSize={viewSize}
+              pageRangeDisplayed={5}
+              onChange={setPage}
+            />
+          ) : (
+            <div></div>
+          )}
+          {histories === ListLoading ? (
+            <Skeleton className="w-50 h-9" />
+          ) : (
             <div className="flex gap-6">
               <CustomSelect
                 className="w-20"
@@ -82,15 +106,15 @@ export const DataTableArea = ({ title }: { title: string }) => {
                 </Button>
               )}
             </div>
-          </div>
+          )}
         </CardDescription>
 
-        {histories === ListLoading ? (
-          <div className="flex flex-col gap-6 h-full">
-            <Skeleton className="h-full w-full rounded-xl bg-input" />
-          </div>
-        ) : (
-          <CardContent className="p-0 h-full gap-2 overflow-hidden">
+        <CardContent className="p-0 h-full gap-2 overflow-hidden">
+          {histories === ListLoading ? (
+            <div className="flex flex-col gap-6 h-full">
+              <Skeleton className="h-full w-full rounded-xl bg-input" />
+            </div>
+          ) : (
             <div className="rounded-md border h-full overflow-y-auto">
               <CustomDataTable<History, any>
                 columns={columns}
@@ -99,8 +123,8 @@ export const DataTableArea = ({ title }: { title: string }) => {
                 viewSize={viewSize}
               />
             </div>
-          </CardContent>
-        )}
+          )}
+        </CardContent>
       </Card>
     </div>
   );

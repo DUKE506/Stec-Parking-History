@@ -24,12 +24,23 @@ const Filter = () => {
   const router = useRouter();
   const queryParams = new URLSearchParams();
   const { setQueryParams } = useApiStore();
-  const { state, duration, carNumber, setState, setDuration, setCarNumber, setPage, setFilterReset } = usePatrolFilterStore();
+  const {
+    state,
+    duration,
+    carNumber,
+    setState,
+    setDuration,
+    setCarNumber,
+    setPage,
+    setFilterReset,
+  } = usePatrolFilterStore();
 
   const onSearch = () => {
-    if (state) queryParams.append('state', state);
-    if (isValidDate(duration?.from) && duration?.from) queryParams.append("startDate", duration?.from.toString());
-    if (isValidDate(duration?.to) && duration?.to) queryParams.append("endDate", duration.to.toString());
+    if (state) queryParams.append("state", state);
+    if (isValidDate(duration?.from) && duration?.from)
+      queryParams.append("startDate", duration?.from.toString());
+    if (isValidDate(duration?.to) && duration?.to)
+      queryParams.append("endDate", duration.to.toString());
     if (carNumber) queryParams.append("carNumber", carNumber);
 
     setPage(1);
@@ -37,10 +48,10 @@ const Filter = () => {
     const url = `/patrol/?${queryParams}`;
     setQueryParams(queryParams.toString());
     router.push(url);
-  }
+  };
 
   return (
-    <Card className=" h-fit">
+    <Card className="h-fit">
       <CardHeader className="flex-row items-center">
         <CardTitle>검색 조건</CardTitle>
         <RotateCcw
@@ -56,11 +67,22 @@ const Filter = () => {
           values={duration}
           onChange={setDuration}
         />
-        <CustomSelect label="순찰상태" values={PatrolState} defaultValue={state} onChange={setState} />
-        <CustomInput label="차량번호" value={carNumber} onChange={setCarNumber} />
+        <CustomSelect
+          label="순찰상태"
+          values={PatrolState}
+          defaultValue={state}
+          onChange={setState}
+        />
+        <CustomInput
+          label="차량번호"
+          value={carNumber}
+          onChange={setCarNumber}
+        />
       </CardContent>
       <CardFooter>
-        <Button className="w-full hover:cursor-pointer" onClick={onSearch}>조회</Button>
+        <Button className="w-full hover:cursor-pointer" onClick={onSearch}>
+          조회
+        </Button>
       </CardFooter>
     </Card>
   );

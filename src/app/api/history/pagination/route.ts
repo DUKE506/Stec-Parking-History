@@ -25,13 +25,17 @@ export async function GET(req: NextRequest) {
   let startDate = null;
   let endDate = null;
   if (start) startDate = new Date(start);
+  startDate?.setUTCHours(0, 0, 0, 0);
   if (end) endDate = new Date(end);
+  endDate?.setUTCHours(23, 59, 59, 59);
+  console.log("시작기간 :", startDate);
+  console.log("종료기간 : ", endDate);
 
   let dateWhere = {};
 
   if (start && end) {
-
     if (parkingState == null) {
+      console.log(1);
       dateWhere = {
         OR: [
           {
@@ -39,6 +43,8 @@ export async function GET(req: NextRequest) {
               gte: startDate,
               lte: endDate,
             },
+          },
+          {
             exitTime: {
               gte: startDate,
               lte: endDate,
@@ -47,6 +53,7 @@ export async function GET(req: NextRequest) {
         ],
       };
     } else if (parkingState === "입차") {
+      console.log(2);
       dateWhere = {
         entryTime: {
           gte: startDate,
@@ -54,6 +61,7 @@ export async function GET(req: NextRequest) {
         },
       };
     } else if (parkingState === "출차") {
+      console.log(3);
       dateWhere = {
         entryTime: {
           gte: startDate,
@@ -62,6 +70,8 @@ export async function GET(req: NextRequest) {
       };
     }
   }
+
+  console.log(JSON.stringify({ ...dateWhere }));
 
   const [data, totalCount] = await prisma.$transaction([
     prisma.history.findMany({

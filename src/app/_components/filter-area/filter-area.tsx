@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useApiStore } from "@/stores/api-store";
 import { RotateCcw } from "lucide-react";
 import { isValidDate } from "@/utils/utils";
+import { useEffect } from "react";
 
 const FilterArea = () => {
   const router = useRouter();
@@ -36,12 +37,18 @@ const FilterArea = () => {
 
   const { setQueryParams } = useApiStore();
 
+  useEffect(() => {
+    console.log("기간", duration);
+  }, [duration]);
+
   const onSearch = () => {
     if (carType) queryParams.append("carType", carType);
     if (parkingState) queryParams.append("parkingState", parkingState);
     if (carNumber) queryParams.append("carNumber", carNumber);
-    if (isValidDate(duration?.from) && duration?.from) queryParams.append("startDate", duration?.from.toString());
-    if (isValidDate(duration?.to) && duration?.to) queryParams.append("endDate", duration.to.toString());
+    if (isValidDate(duration?.from) && duration?.from)
+      queryParams.append("startDate", duration?.from.toString());
+    if (isValidDate(duration?.to) && duration?.to)
+      queryParams.append("endDate", duration.to.toString());
     if (dong) queryParams.append("dong", dong);
     if (ho) queryParams.append("ho", ho);
     setPage(1);

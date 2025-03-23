@@ -6,7 +6,7 @@ import HistoryInfoArea from "./_components/history-info-area/history-info-area";
 import { DataTableArea } from "./_components/history-table-area/history-table-area";
 import Navigation from "./_components/nav/nav";
 
-import { useQuerySync } from "@/hooks/history_hooks";
+import { useQuerySync } from "@/hooks/history/history_hooks";
 
 export default function Home() {
   useQuerySync();
@@ -17,7 +17,7 @@ export default function Home() {
         <Navigation />
         <FilterArea />
         <div className="flex px-10 gap-10  flex-1 min-h-0 pb-10">
-          <DataTableArea title="입출차 조회" />
+          <DataTableArea title="입출차 이력" />
           <HistoryInfoArea />
         </div>
       </div>
