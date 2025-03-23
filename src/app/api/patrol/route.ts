@@ -2,6 +2,7 @@ import { prisma } from "@/lib/_server/db";
 import { ListMeta, ListModel } from "@/types/list-type";
 import { NextRequest, NextResponse } from "next/server";
 import schema from "./schema";
+import { PatrolState } from "@prisma/client";
 
 /**
  * 순찰 데이터 조회
@@ -21,30 +22,58 @@ export async function GET(req: NextRequest) {
     const start = searchParams.get("startDate") ?? null;
     let startDate = null;
     if (start) startDate = new Date(start);
+    startDate?.setUTCHours(0, 0, 0, 0)
 
-    const end = searchParams.get("end") ?? null;
+    const end = searchParams.get("endDate") ?? null;
     let endDate = null;
     if (end) endDate = new Date(end);
+    endDate?.setUTCHours(23, 59, 59, 59)
 
     //순찰상태
-    const codeName = searchParams.get("state") ?? null;
+    const codeName = (searchParams.get("state") as PatrolState) ?? null;
     //차량번호
     const carNumber = searchParams.get("carNumber") ?? null;
+
+    console.log("순찰상태 : ", codeName)
+    console.log("차량번호 : ", carNumber)
+    console.log('시작기간 :', startDate)
+    console.log('종료기간 : ', endDate)
+
+
 
     const [data, totalCount] = await prisma.$transaction([
       prisma.patrol.findMany({
         where: {
-          //   ...(startDate && {startDate}),
+          ...((startDate && endDate) && {
+            time: {
+              gte: startDate,
+              lte: endDate,
+            }
+          }),
           ...(codeName && { codeName }),
-          ...(carNumber && { carNumber }),
+          ...(carNumber && {
+            carNumber: {
+              contains: carNumber,
+            },
+          }),
         },
         skip: (page - 1) * viewSize,
         take: viewSize,
       }),
       prisma.patrol.count({
         where: {
+          ...((startDate && endDate) && {
+            time: {
+              lte: startDate,
+              gte: endDate,
+            }
+          }),
           ...(codeName && { codeName }),
-          ...(carNumber && { carNumber }),
+          ...(carNumber && {
+            carNumber: {
+              contains: carNumber,
+            },
+          }),
         },
       }),
     ]);
@@ -89,7 +118,7 @@ export async function POST(req: NextRequest) {
         data: {
           parkId: patrol.PARK_ID,
           userName: patrol.PATROL_USER_NM,
-          time: patrol.PATROL_DTM,
+          time: new Date(patrol.PATROL_DTM),
           code: patrol.PATROL_CODE,
           codeName: patrol.PATROL_NAME,
           carNumber: patrol.CAR_NUM,

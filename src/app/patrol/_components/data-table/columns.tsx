@@ -2,6 +2,8 @@ import { Badge } from "@/components/ui/badge";
 import { PatrolStateUnionType } from "@/types/patrol/patrol";
 import { Patrol, PatrolState } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
+import dayjs from "dayjs";
+import { Check } from "lucide-react";
 
 export const columns: ColumnDef<Patrol>[] = [
   {
@@ -9,7 +11,13 @@ export const columns: ColumnDef<Patrol>[] = [
     header: () => <div className="text-center">순찰시간</div>,
     cell: ({ row }) => {
       const cellData = row.original.time;
-      return <div className="text-center">{cellData}</div>;
+      if (!cellData) {
+        return <div className="text-center"></div>;
+      }
+
+      const formatValue = dayjs(cellData).format("YYYY-MM-DD HH:mm:ss");
+
+      return <div className="text-center">{formatValue}</div>;
     },
   },
   {
@@ -29,12 +37,12 @@ export const columns: ColumnDef<Patrol>[] = [
           backgroundColor = "bg-green-500";
           break;
         case PatrolState.순찰:
-          backgroundColor = "bg-purple-500";
+          backgroundColor = "bg-black";
           break;
       }
       return (
         <div className="text-center">
-          <Badge className={`${backgroundColor}`}>{cellData}</Badge>
+          <Badge className={`${backgroundColor} w-20`} >{cellData}</Badge>
         </div>
       );
     },
@@ -68,7 +76,10 @@ export const columns: ColumnDef<Patrol>[] = [
     header: () => <div className="text-center">비고</div>,
     cell: ({ row }) => {
       const cellData = row.original.note;
-      return <div className="text-center">{cellData}</div>;
+      const returnValue = cellData ? (
+        <Check className="text-blue-500" size={20} />
+      ) : null;
+      return <div className="flex justify-center">{returnValue}</div>;
     },
   },
 ];

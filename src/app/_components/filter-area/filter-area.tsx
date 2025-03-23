@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 
 import { CarType, ParkingState } from "@/types/history/histroy";
 import { useFilterStore } from "@/stores/filter-store";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useHistoryStore } from "@/stores/histories-store";
+import { useRouter } from "next/navigation";
+
 import { useApiStore } from "@/stores/api-store";
 import { RotateCcw } from "lucide-react";
+import { isValidDate } from "@/utils/utils";
 
 const FilterArea = () => {
   const router = useRouter();
@@ -39,9 +40,8 @@ const FilterArea = () => {
     if (carType) queryParams.append("carType", carType);
     if (parkingState) queryParams.append("parkingState", parkingState);
     if (carNumber) queryParams.append("carNumber", carNumber);
-    if (duration?.from)
-      queryParams.append("startDate", duration.from.toString());
-    if (duration?.to) queryParams.append("endDate", duration.to.toString());
+    if (isValidDate(duration?.from) && duration?.from) queryParams.append("startDate", duration?.from.toString());
+    if (isValidDate(duration?.to) && duration?.to) queryParams.append("endDate", duration.to.toString());
     if (dong) queryParams.append("dong", dong);
     if (ho) queryParams.append("ho", ho);
     setPage(1);

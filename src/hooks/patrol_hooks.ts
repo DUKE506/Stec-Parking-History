@@ -3,6 +3,7 @@ import { useApiStore } from "@/stores/api-store";
 import { useHistoryStore } from "@/stores/histories-store";
 import { usePatrolFilterStore } from "@/stores/patrol-filter-store";
 import { usePatrolStore } from "@/stores/patrol-store";
+import { PatrolState } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -10,17 +11,17 @@ export function usePatrolQuerySync() {
   const searchParams = useSearchParams();
   const { fetchPatrolData } = usePatrolStore();
   const { setQueryParams } = useApiStore();
-  const { setState, setCarNumber, setDuration, setPage, setViewSize } =
-    usePatrolFilterStore();
+  const { setState, setCarNumber, setDuration, setPage, setViewSize } = usePatrolFilterStore();
 
   useEffect(() => {
     // console.log(
     //   "쿼리 파라미터 : ",
     //   new URLSearchParams(searchParams).toString()
     // );
+    if (!searchParams) return; // 
 
     //순찰상태
-    setState(searchParams.get("state") ?? "");
+    setState(searchParams.get("state") as PatrolState ?? "");
 
     //차량번호
     setCarNumber(searchParams.get("carNumber") ?? "");

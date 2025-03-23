@@ -111,14 +111,14 @@ model GateLog {
   historyId        Int?
 }
 
-model Patrol{
-  id Int      @id @default(autoincrement())
-  parkId String
-  userName String
-  time String
-  code Int
-  codeName PatrolState
-  img String?
+model Patrol {
+  id        Int         @id @default(autoincrement())
+  parkId    String
+  userName  String
+  time      DateTime
+  code      Int
+  codeName  PatrolState
+  img       String?
   carNumber String
-  note String
+  note      String
 }

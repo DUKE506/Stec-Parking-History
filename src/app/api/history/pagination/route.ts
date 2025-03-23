@@ -30,9 +30,8 @@ export async function GET(req: NextRequest) {
   let dateWhere = {};
 
   if (start && end) {
-    console.log("시작");
+
     if (parkingState == null) {
-      console.log("1");
       dateWhere = {
         OR: [
           {
@@ -48,7 +47,6 @@ export async function GET(req: NextRequest) {
         ],
       };
     } else if (parkingState === "입차") {
-      console.log("2");
       dateWhere = {
         entryTime: {
           gte: startDate,
@@ -56,7 +54,6 @@ export async function GET(req: NextRequest) {
         },
       };
     } else if (parkingState === "출차") {
-      console.log("3");
       dateWhere = {
         entryTime: {
           gte: startDate,
@@ -87,7 +84,11 @@ export async function GET(req: NextRequest) {
       where: {
         ...(carType && { carType }),
         ...(parkingState && { parkingState }),
-        ...(carNumber && { carNumber }),
+        ...(carNumber && {
+          carNumber: {
+            contains: carNumber,
+          },
+        }),
         ...(dong && { dong }),
         ...(ho && { ho }),
         ...dateWhere,

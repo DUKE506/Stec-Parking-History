@@ -20,7 +20,7 @@ import { ViewSize } from "@/types/history/histroy";
 import { ListLoading, ListModel } from "@/types/list-type";
 import { columns } from "../custom-data-table/columns";
 import { History } from "@prisma/client";
-import { useEffect } from "react";
+
 
 export const DataTableArea = ({ title }: { title: string }) => {
   const router = useRouter();

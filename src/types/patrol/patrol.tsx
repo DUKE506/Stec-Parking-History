@@ -10,10 +10,10 @@ export type PageActionUnionType =
 
 export const PatrolState = {
   ALL: "전체",
-  NORMAL: "정상",
+  NORMAL: "입주민",
   VISIT: "방문객",
   PATROL: "순찰",
-  BLACK: "위반",
+  BLACK: "블랙리스트",
 };
 
 export type PatrolStateUnionType =

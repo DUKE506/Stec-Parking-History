@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useToast } from "../custom-toaster/hooks";
+import { CardDescription } from "@/components/ui/card";
 
 const FormSchema = z.object({
   bio: z.string().min(1, {
@@ -48,7 +49,7 @@ const CustomTextAreaForm = ({
     },
   });
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   //submit 함수
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
@@ -67,8 +68,11 @@ const CustomTextAreaForm = ({
           name="bio"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm justify-between">
-                {label}
+              <FormLabel className="justify-between">
+                <CardDescription>
+                  {label}
+                </CardDescription>
+
                 {isEdit ? (
                   <Button
                     type="button"

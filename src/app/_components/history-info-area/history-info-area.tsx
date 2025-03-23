@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
@@ -15,10 +15,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Carousel } from "@/components/ui/carousel";
+} from "@/components/ui/dialog"
 import { CustomCarousel } from "../custom-carousel/custom-carousel";
-const ImageArea = ({
+export const ImageArea = ({
   label,
   time,
   url,
@@ -30,7 +29,10 @@ const ImageArea = ({
   return (
     <div className="flex flex-col gap-2 h-full">
       <div className="flex justify-between ">
-        <span className="text-sm">{label}</span>
+        <CardDescription>
+          {label}
+        </CardDescription>
+
         <span className="text-xs">{time}</span>
       </div>
       <div className="relative h-full rounded-sm overflow-hidden max-h-[173.5px] min-h-[173.5px]">

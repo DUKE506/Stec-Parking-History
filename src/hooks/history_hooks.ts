@@ -32,10 +32,12 @@ export function useQuerySync() {
     //   "쿼리 파라미터 : ",
     //   new URLSearchParams(searchParams).toString()
     // );
+    if (!searchParams) return; // 
+
     setCarType((searchParams.get("carType") as CarUnionType) ?? CarType.ALL);
     setParkingState(
       (searchParams.get("parkingState") as ParkingStateUnionType) ??
-        ParkingState.ALL
+      ParkingState.ALL
     );
     setCarNumber(searchParams.get("carNumber") ?? "");
 

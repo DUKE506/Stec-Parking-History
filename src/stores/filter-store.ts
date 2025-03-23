@@ -89,7 +89,6 @@ export const useFilterStore = create<FilterState>()(
         set({ carNumber: number });
       },
       setDuration: (duration) => {
-        console.log("기간 : ", duration);
         if (duration) set({ duration: duration });
         else set({ duration: null });
       },
