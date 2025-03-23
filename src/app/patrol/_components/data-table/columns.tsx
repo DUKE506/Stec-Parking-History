@@ -1,14 +1,29 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { PatrolStateUnionType } from "@/types/patrol/patrol";
 import { Patrol, PatrolState } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { Check } from "lucide-react";
+import { ArrowUpDown, Check } from "lucide-react";
 
 export const columns: ColumnDef<Patrol>[] = [
   {
     accessorKey: "time",
-    header: () => <div className="text-center">순찰시간</div>,
+    header: ({ column }) => {
+      return (
+        <div className="text-center">
+          <Button
+            variant="ghost"
+            onClick={() => {
+              column.toggleSorting(column.getIsSorted() === "asc");
+            }}
+          >
+            순찰시간
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const cellData = row.original.time;
       if (!cellData) {
@@ -22,7 +37,21 @@ export const columns: ColumnDef<Patrol>[] = [
   },
   {
     accessorKey: "codeName",
-    header: () => <div className="text-center">상태</div>,
+    header: ({ column }) => {
+      return (
+        <div className="text-center">
+          <Button
+            variant="ghost"
+            onClick={() => {
+              column.toggleSorting(column.getIsSorted() === "asc");
+            }}
+          >
+            상태
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const cellData = row.original.codeName;
       let backgroundColor = "bg-muted-foreground";
@@ -42,14 +71,28 @@ export const columns: ColumnDef<Patrol>[] = [
       }
       return (
         <div className="text-center">
-          <Badge className={`${backgroundColor} w-20`} >{cellData}</Badge>
+          <Badge className={`${backgroundColor} w-20`}>{cellData}</Badge>
         </div>
       );
     },
   },
   {
     accessorKey: "carNumber",
-    header: () => <div className="text-center">차량번호</div>,
+    header: ({ column }) => {
+      return (
+        <div className="text-center">
+          <Button
+            variant="ghost"
+            onClick={() => {
+              column.toggleSorting(column.getIsSorted() === "asc");
+            }}
+          >
+            차량번호
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const cellData = row.original.carNumber;
       return <div className="text-center">{cellData}</div>;
