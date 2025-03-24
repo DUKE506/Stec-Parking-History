@@ -51,7 +51,7 @@ export const ImageArea = ({ data }: { data: Patrol }) => {
     <div className="flex flex-col gap-2">
       <div className="flex justify-between">
         <CardDescription>이미지</CardDescription>
-        <span className="text-sm">
+        <span className="text-xs">
           {dayjs(data.time).format("YYYY-MM-DD HH:mm:ss")}
         </span>
       </div>

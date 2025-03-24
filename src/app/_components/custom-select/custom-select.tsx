@@ -16,12 +16,14 @@ export const CustomSelect = <T extends EnumType>({
   className,
   defaultValue,
   onChange,
+  onKeyDown,
 }: {
   label?: string;
   values: T;
   defaultValue?: any;
   className?: React.ComponentProps<"div">["className"];
   onChange?: (value: any) => void;
+  onKeyDown?: () => void;
 }) => {
   const getEnumValues = (
     enumObject: T
@@ -43,8 +45,11 @@ export const CustomSelect = <T extends EnumType>({
         value={defaultValue?.toString()}
       >
         {/* <SelectTrigger className="w-[180px]"> */}
-        <SelectTrigger className="w-full hover:cursor-pointer">
-          <SelectValue placeholder="선택" />
+        <SelectTrigger
+          className="w-full hover:cursor-pointer"
+          onKeyDown={onKeyDown}
+        >
+          <SelectValue placeholder="전체" />
         </SelectTrigger>
         <SelectContent>
           {enumValues.map((item) => {

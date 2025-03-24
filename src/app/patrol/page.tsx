@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Navigation from "../_components/nav/nav";
 import Filter from "./_components/filter/filter";
 import List from "./_components/list/list";
@@ -7,10 +7,16 @@ import { usePatrolQuerySync } from "@/hooks/patrol/patrol_hooks";
 import { PatrolDetail } from "./_components/patrol-detail/patrol-detail";
 import { usePatrolStore } from "@/stores/patrol-store";
 import { ArrowUp } from "lucide-react";
+import { usePatrolFilterStore } from "@/stores/patrol-filter-store";
 
 const Page = () => {
   const { currentPatrol } = usePatrolStore();
+  const { viewSize } = usePatrolFilterStore();
   usePatrolQuerySync();
+
+  useEffect(() => {
+    console.log("순찰 ROOT 페이지 :", viewSize);
+  }, [viewSize]);
 
   const onScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });

@@ -11,17 +11,18 @@ export function usePatrolQuerySync() {
   const searchParams = useSearchParams();
   const { fetchPatrolData } = usePatrolStore();
   const { setQueryParams } = useApiStore();
-  const { setState, setCarNumber, setDuration, setPage, setViewSize } = usePatrolFilterStore();
+  const { setState, setCarNumber, setDuration, setPage, setViewSize } =
+    usePatrolFilterStore();
 
   useEffect(() => {
     // console.log(
     //   "쿼리 파라미터 : ",
     //   new URLSearchParams(searchParams).toString()
     // );
-    if (!searchParams) return; // 
+    if (!searchParams) return; //
 
     //순찰상태
-    setState(searchParams.get("state") as PatrolState ?? "");
+    setState((searchParams.get("state") as PatrolState) ?? "");
 
     //차량번호
     setCarNumber(searchParams.get("carNumber") ?? "");

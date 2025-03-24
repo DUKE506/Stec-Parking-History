@@ -23,7 +23,8 @@ const DatePickerWithRange = ({
   values,
   onChange,
 }: {
-  className?: React.HTMLAttributes<HTMLDivElement>;
+  // className?: React.HTMLAttributes<HTMLDivElement>;
+  className?: string;
   label: string;
   option?: boolean;
   values: DateRange | null;
@@ -98,7 +99,7 @@ const DatePickerWithRange = ({
                 id="date"
                 variant={"outline"}
                 className={cn(
-                  "w-[300px] justify-start text-left font-normal hover:cursor-pointer",
+                  "w-[300px] justify-start text-left font-normal hover:cursor-pointer ",
                   !date && "text-muted-foreground"
                 )}
               >

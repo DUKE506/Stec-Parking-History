@@ -17,7 +17,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   //컬럼 구조
@@ -56,6 +56,10 @@ const CustomDataTable = <TData, TValue>({
       },
     },
   });
+
+  useEffect(() => {
+    console.log("테이블 컴포넌트 뷰 사이즈 : ", viewSize);
+  }, [viewSize]);
 
   //row 클릭 핸들러러
   const onRowHandle = (data: TData) => {

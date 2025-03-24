@@ -54,24 +54,31 @@ export const columns: ColumnDef<Patrol>[] = [
     },
     cell: ({ row }) => {
       const cellData = row.original.codeName;
+      let textColor = "text-black";
       let backgroundColor = "bg-muted-foreground";
       switch (cellData as PatrolState) {
         case PatrolState.블랙리스트:
           backgroundColor = "bg-destructive";
+          textColor = "text-white";
           break;
         case PatrolState.방문객:
           backgroundColor = "bg-blue-500";
+          backgroundColor = "bg-white";
           break;
         case PatrolState.입주민:
           backgroundColor = "bg-green-500";
+          backgroundColor = "bg-white";
           break;
         case PatrolState.순찰:
-          backgroundColor = "bg-black";
+          backgroundColor = "bg-muted-foreground";
+          backgroundColor = "bg-white";
           break;
       }
       return (
         <div className="text-center">
-          <Badge className={`${backgroundColor} w-20`}>{cellData}</Badge>
+          <Badge className={`${backgroundColor} w-20 ${textColor}`}>
+            {cellData}
+          </Badge>
         </div>
       );
     },

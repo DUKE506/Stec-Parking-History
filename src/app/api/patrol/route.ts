@@ -22,34 +22,33 @@ export async function GET(req: NextRequest) {
     const start = searchParams.get("startDate") ?? null;
     let startDate = null;
     if (start) startDate = new Date(start);
-    startDate?.setUTCHours(0, 0, 0, 0)
+    startDate?.setUTCHours(0, 0, 0, 0);
 
     const end = searchParams.get("endDate") ?? null;
     let endDate = null;
     if (end) endDate = new Date(end);
-    endDate?.setUTCHours(23, 59, 59, 59)
+    endDate?.setUTCHours(23, 59, 59, 59);
 
     //순찰상태
     const codeName = (searchParams.get("state") as PatrolState) ?? null;
     //차량번호
     const carNumber = searchParams.get("carNumber") ?? null;
 
-    console.log("순찰상태 : ", codeName)
-    console.log("차량번호 : ", carNumber)
-    console.log('시작기간 :', startDate)
-    console.log('종료기간 : ', endDate)
-
-
+    console.log("순찰상태 : ", codeName);
+    console.log("차량번호 : ", carNumber);
+    console.log("시작기간 :", startDate);
+    console.log("종료기간 : ", endDate);
 
     const [data, totalCount] = await prisma.$transaction([
       prisma.patrol.findMany({
         where: {
-          ...((startDate && endDate) && {
-            time: {
-              gte: startDate,
-              lte: endDate,
-            }
-          }),
+          ...(startDate &&
+            endDate && {
+              time: {
+                gte: startDate,
+                lte: endDate,
+              },
+            }),
           ...(codeName && { codeName }),
           ...(carNumber && {
             carNumber: {
@@ -62,12 +61,13 @@ export async function GET(req: NextRequest) {
       }),
       prisma.patrol.count({
         where: {
-          ...((startDate && endDate) && {
-            time: {
-              lte: startDate,
-              gte: endDate,
-            }
-          }),
+          ...(startDate &&
+            endDate && {
+              time: {
+                lte: startDate,
+                gte: endDate,
+              },
+            }),
           ...(codeName && { codeName }),
           ...(carNumber && {
             carNumber: {
@@ -101,6 +101,11 @@ export async function GET(req: NextRequest) {
   }
 }
 
+/**
+ * 순찰데이터 밀어넣기
+ * @param req
+ * @returns
+ */
 export async function POST(req: NextRequest) {
   const body = await req.json();
 

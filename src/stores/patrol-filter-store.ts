@@ -13,7 +13,7 @@ interface PatrolFilterState {
   setDuration: (duration: DateRange | null) => void;
   setCarNumber: (carNumber: string | null) => void;
   setPage: (page: number | null) => void;
-  setViewSize: (viewSize: number | null) => void;
+  setViewSize: (num: number | null) => void;
   setFilterReset: () => void;
 }
 
@@ -51,7 +51,7 @@ export const usePatrolFilterStore = create<PatrolFilterState>()(
     setCarNumber: (carNumber) => {
       if (carNumber) return set({ carNumber: carNumber });
 
-      set({ carNumber: '' })
+      set({ carNumber: "" });
     },
     /**
      * 현재 페이지
@@ -69,6 +69,7 @@ export const usePatrolFilterStore = create<PatrolFilterState>()(
      * @param num
      */
     setViewSize: (num) => {
+      console.log("상태관리 뷰 사이즈 : ", num);
       if (!num) {
         set({ viewSize: 20 });
       } else {
@@ -82,7 +83,7 @@ export const usePatrolFilterStore = create<PatrolFilterState>()(
         carNumber: "",
         page: 1,
         viewSize: 20,
-      })
-    }
+      });
+    },
   }))
 );

@@ -50,6 +50,12 @@ const Filter = () => {
     router.push(url);
   };
 
+  const handleEnterKey = (e: KeyboardEvent) => {
+    if (e.code !== "Enter") return;
+
+    onSearch();
+  };
+
   return (
     <Card className="h-fit">
       <CardHeader className="flex-row items-center">
@@ -72,6 +78,7 @@ const Filter = () => {
           values={PatrolState}
           defaultValue={state}
           onChange={setState}
+          onKeyDown={() => handleEnterKey}
         />
         <CustomInput
           label="차량번호"

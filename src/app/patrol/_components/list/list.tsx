@@ -115,7 +115,7 @@ const List = () => {
               columns={columns}
               data={(patrol as ListModel<Patrol>).data}
               onClickRow={setCurrentPatrol}
-              viewSize={20}
+              viewSize={viewSize}
             />
           </div>
         )}
