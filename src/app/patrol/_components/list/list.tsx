@@ -10,7 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { columns } from "../data-table/columns";
 import { ViewSize } from "@/types/history/histroy";
-import { Patrol } from "@prisma/client";
+import { Patrol } from "@/types/patrol/patrol";
 import { usePatrolStore } from "@/stores/patrol-store";
 import { ListLoading, ListModel } from "@/types/list-type";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -22,25 +22,24 @@ import { useRouter } from "next/navigation";
 import { onPatrolExportData } from "@/hooks/patrol/excel";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
+import { useToast } from "@/app/_components/custom-toaster/hooks";
 
 const List = () => {
-  const { patrol, setCurrentPatrol } = usePatrolStore();
+  const { patrol, patrolTotalCount, setCurrentPatrol, getExportData } =
+    usePatrolStore();
   const { page, viewSize, setPage, setViewSize } = usePatrolFilterStore();
   const router = useRouter();
   const { queryParams } = useApiStore();
   const [isPagination, setIsPagination] = useState<boolean>(false);
-
+  //toast
+  const Toast = useToast();
   useEffect(() => {
     //로딩중
     if (patrol === ListLoading) {
       return;
     }
     if (patrol !== ListLoading) {
-      if (
-        Math.ceil(
-          (patrol as ListModel<Patrol>).meta.totalItemCount / viewSize
-        ) > 1
-      ) {
+      if (Math.ceil(patrolTotalCount / viewSize) > 1) {
         setIsPagination(true);
         return;
       }
@@ -50,9 +49,9 @@ const List = () => {
   }, [patrol, viewSize]);
 
   //view 개수 변경 핸들러
-  const onSelectViewNum = (value: any) => {
+  const onSelectViewNum = (value: number) => {
     const params = new URLSearchParams(queryParams);
-    params.set("viewSize", value);
+    params.set("viewSize", value.toString());
     params.set("page", "1");
     setPage(1);
     setViewSize(value);
@@ -60,15 +59,22 @@ const List = () => {
   };
 
   const onExport = async () => {
-    await onPatrolExportData({
+    const data = await getExportData();
+    const res = await onPatrolExportData({
       title: "순찰이력",
       worksheetname: "순찰이력",
-      datas: (patrol as ListModel<Patrol>).data,
+      datas: data,
     });
+
+    if (!res) {
+      Toast.addToast({ message: "실패", type: "error" });
+      return;
+    }
+    Toast.addToast({ message: "저장" });
   };
 
   return (
-    <Card className="w-full mb-10 min-h-[100]">
+    <Card className="w-full min-h-[100%] h-full">
       <CardHeader>
         <CardTitle>순찰 이력</CardTitle>
       </CardHeader>
@@ -78,7 +84,7 @@ const List = () => {
         ) : isPagination ? (
           <Pagination
             activePage={page}
-            totalItemCount={(patrol as ListModel<Patrol>).meta.totalItemCount}
+            totalItemCount={patrolTotalCount}
             viewSize={viewSize}
             pageRangeDisplayed={5}
             onChange={setPage}
@@ -96,7 +102,7 @@ const List = () => {
               defaultValue={viewSize}
               onChange={onSelectViewNum}
             />
-            {(patrol as ListModel<Patrol>).meta.totalItemCount < 1 ? null : (
+            {patrolTotalCount < 1 ? null : (
               <Button className="cursor-pointer" onClick={onExport}>
                 <Download />
                 <span>Excel</span>
@@ -111,7 +117,7 @@ const List = () => {
           <Skeleton className="w-full h-full" />
         ) : (
           <div className="rounded-md border h-full overflow-y-auto">
-            <CustomDataTable<Patrol, any>
+            <CustomDataTable
               columns={columns}
               data={(patrol as ListModel<Patrol>).data}
               onClickRow={setCurrentPatrol}

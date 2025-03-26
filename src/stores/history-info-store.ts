@@ -1,7 +1,10 @@
-import { GateLog, History } from "@prisma/client";
+"use client";
+import { GateLog } from "@/types/history/history-info";
+import { History } from "@/types/history/histroy";
 import dayjs from "dayjs";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { useApiStore } from "./api-store";
 
 interface HistoryInfoState {
   currentHistoryLog: GateLog[] | null;
@@ -10,15 +13,18 @@ interface HistoryInfoState {
 }
 
 export const useHistoryInfoStore = create<HistoryInfoState>()(
-  devtools((set, get) => ({
+  devtools((set) => ({
     currentHistoryLog: null,
     loading: false,
     fetchWeekLogs: async (history) => {
       set({ loading: true });
       //   await new Promise((resolve) => setTimeout(resolve, 3000));
-      const formatDate = dayjs(history.entryTime).format("YYYY-MM-DD HH:mm:ss");
+      const formatDate = dayjs(history.inDtm).format("YYYY-MM-DD HH:mm:ss");
+      const { baseUrl } = useApiStore.getState();
       const res = await fetch(
-        `/api/history/info/${formatDate.split(" ")[0]}/${history.carNumber}`
+        `${baseUrl}api/InOut/v1/ViewLastWeeks?carNumber=${
+          history.carNum
+        }&searchDate=${formatDate.split(" ")[0]}`
       );
       const data = await res.json();
 

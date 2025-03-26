@@ -2,14 +2,13 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -43,17 +42,16 @@ const CustomTextAreaForm = ({
   const { addToast } = useToast();
   //폼
   const form = useForm<z.infer<typeof FormSchema>>({
-    // resolver: zodResolver(FormSchema),
     defaultValues: {
       bio: value,
     },
   });
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
 
   //submit 함수
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    setValue(data.bio);
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    await setValue(data.bio);
     addToast({
       message: "저장",
     });
@@ -69,9 +67,7 @@ const CustomTextAreaForm = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel className="justify-between">
-                <CardDescription>
-                  {label}
-                </CardDescription>
+                <CardDescription>{label}</CardDescription>
 
                 {isEdit ? (
                   <Button

@@ -1,7 +1,7 @@
 import XLSX from "xlsx-js-style";
-import { Patrol } from "@prisma/client";
-import { ListBaseType, ListLoading, ListModel } from "@/types/list-type";
+import { ListBaseType, ListLoading } from "@/types/list-type";
 import dayjs from "dayjs";
+import { Patrol } from "@/types/patrol/patrol";
 export const onPatrolExportData = async ({
   title,
   worksheetname,
@@ -18,11 +18,11 @@ export const onPatrolExportData = async ({
 
     const dataToExport = (datas as Patrol[]).map((data: Patrol) => {
       return {
-        순찰시간: dayjs(data.time).format("YYYY-MM-DD HH:mm:ss"),
-        순찰상태: data.codeName,
-        차량번호: data.carNumber,
-        담당자: data.userName,
-        비고: data.note,
+        순찰시간: dayjs(data.patrolDtm).format("YYYY-MM-DD HH:mm:ss"),
+        순찰상태: data.patrolName,
+        차량번호: data.carNum,
+        담당자: data.patrolUserNm,
+        비고: data.patrolRemark,
       };
     });
 
@@ -58,8 +58,8 @@ export const onPatrolExportData = async ({
     XLSX.utils.book_append_sheet(workbook, worksheet, worksheetname);
     // Save the workbook as an Excel file
     XLSX.writeFile(workbook, `${title}.xlsx`);
-    console.log(`Exported data to ${title}.xlsx`);
+    return true;
   } catch (err: any) {
-    console.log("#==================Export Error", err.message);
+    return false;
   }
 };

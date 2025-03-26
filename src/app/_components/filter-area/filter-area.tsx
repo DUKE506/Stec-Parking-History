@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 import { useApiStore } from "@/stores/api-store";
 import { RotateCcw } from "lucide-react";
 import { isValidDate } from "@/utils/utils";
-import { useEffect } from "react";
 
 const FilterArea = () => {
   const router = useRouter();
@@ -37,13 +36,14 @@ const FilterArea = () => {
 
   const { setQueryParams } = useApiStore();
 
-  useEffect(() => {
-    console.log("기간", duration);
-  }, [duration]);
+  const handleEnterKey = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "Enter" && e.key !== "NumpadEnter") return;
+    onSearch();
+  };
 
   const onSearch = () => {
-    if (carType) queryParams.append("carType", carType);
-    if (parkingState) queryParams.append("parkingState", parkingState);
+    if (carType) queryParams.append("ioTicketTpNm", carType);
+    if (parkingState) queryParams.append("ioStatusTpNm", parkingState);
     if (carNumber) queryParams.append("carNumber", carNumber);
     if (isValidDate(duration?.from) && duration?.from)
       queryParams.append("startDate", duration?.from.toString());
@@ -69,7 +69,7 @@ const FilterArea = () => {
             onClick={setFilterReset}
           />
         </CardHeader>
-        <CardContent className="flex justify-between gap-8 items-end">
+        <CardContent className="flex justify-between gap-8 items-end ">
           <CustomSelect
             label="입출유형"
             values={CarType}
@@ -87,6 +87,7 @@ const FilterArea = () => {
             label="차량번호"
             value={carNumber}
             onChange={setCarNumber}
+            onKeyDown={(e) => handleEnterKey(e)}
           />
           <DatePickerWithRange
             label="기간"
@@ -94,8 +95,18 @@ const FilterArea = () => {
             values={duration}
             onChange={setDuration}
           />
-          <CustomInput label="동" value={dong} onChange={setDong} />
-          <CustomInput label="호" value={ho} onChange={setHo} />
+          <CustomInput
+            label="동"
+            value={dong}
+            onChange={setDong}
+            onKeyDown={(e) => handleEnterKey(e)}
+          />
+          <CustomInput
+            label="호"
+            value={ho}
+            onChange={setHo}
+            onKeyDown={(e) => handleEnterKey(e)}
+          />
           <div className="flex items-center">
             <Button className="hover:cursor-pointer" onClick={onSearch}>
               조회

@@ -1,46 +1,14 @@
-"use client";
-import React, { useEffect } from "react";
-import Navigation from "../_components/nav/nav";
-import Filter from "./_components/filter/filter";
-import List from "./_components/list/list";
-import { usePatrolQuerySync } from "@/hooks/patrol/patrol_hooks";
-import { PatrolDetail } from "./_components/patrol-detail/patrol-detail";
-import { usePatrolStore } from "@/stores/patrol-store";
-import { ArrowUp } from "lucide-react";
-import { usePatrolFilterStore } from "@/stores/patrol-filter-store";
+import { Suspense } from "react";
+import PatrolClientPage from "./patrolClientPage";
 
-const Page = () => {
-  const { currentPatrol } = usePatrolStore();
-  const { viewSize } = usePatrolFilterStore();
-  usePatrolQuerySync();
-
-  useEffect(() => {
-    console.log("순찰 ROOT 페이지 :", viewSize);
-  }, [viewSize]);
-
-  const onScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
+const PatrolPage = () => {
   return (
-    <div className="h-full min-h-[100vh]">
-      <div className="flex flex-col w-full gap-10  h-full">
-        <Navigation />
-        <div className="flex px-10 gap-10 h-full">
-          <div className="flex flex-col  gap-10 relative w-[350px]">
-            <Filter />
-            {currentPatrol ? <PatrolDetail data={currentPatrol} /> : null}
-          </div>
-          <List />
-        </div>
-      </div>
-      <ArrowUp
-        className="fixed right-5 bottom-5 bg-black text-white rounded-full p-1 : hover:bg-muted-foreground hover:cursor-pointer hover:duration-150"
-        size={30}
-        onClick={onScrollToTop}
-      />
-    </div>
+    // [NEW] Suspense 경계 추가
+    <Suspense fallback={<div>로딩 중...</div>}>
+      {/* [NEW] 실제 컨텐츠를 담은 별도의 컴포넌트 */}
+      <PatrolClientPage />
+    </Suspense>
   );
 };
 
-export default Page;
+export default PatrolPage;

@@ -7,7 +7,7 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+import React, { Suspense, useEffect } from "react";
 
 const Pagination = ({
   //현재페이지 nubmer
@@ -49,7 +49,7 @@ const Pagination = ({
     onChange(pageNumber);
     //URL 이동
 
-    queryParams.set("page", pageNumber.toString());
+    queryParams.set("pageNumber", pageNumber.toString());
     router.push(`?${queryParams.toString()}`);
   };
 
@@ -57,7 +57,7 @@ const Pagination = ({
    *
    */
   const onPageHandle = (value: PageActionUnionType) => {
-    console.log(value);
+    // console.log(value);
     switch (value) {
       case PageActionState.FirstPage:
         pageHandler({ pageNumber: startPage });
@@ -89,36 +89,38 @@ const Pagination = ({
   };
 
   return (
-    <div className="flex gap-2">
-      <PageActionButton
-        icon={ChevronsLeft}
-        onClick={() => onPageHandle(PageActionState.FirstPage)}
-      />
-      <PageActionButton
-        icon={ChevronLeft}
-        onClick={() => onPageHandle(PageActionState.PrevPage)}
-      />
-      {Array.from({ length: endPage - startPage + 1 }).map((_, idx) => {
-        const pageNum = startPage + idx;
-        const isActive = activePage === pageNum;
-        return (
-          <PageItemButton
-            key={pageNum}
-            page={pageNum}
-            isActive={isActive}
-            onClick={() => pageHandler({ pageNumber: pageNum })}
-          />
-        );
-      })}
-      <PageActionButton
-        icon={ChevronRight}
-        onClick={() => onPageHandle(PageActionState.NextPage)}
-      />
-      <PageActionButton
-        icon={ChevronsRight}
-        onClick={() => onPageHandle(PageActionState.LastPage)}
-      />
-    </div>
+    <Suspense>
+      <div className="flex gap-2">
+        <PageActionButton
+          icon={ChevronsLeft}
+          onClick={() => onPageHandle(PageActionState.FirstPage)}
+        />
+        <PageActionButton
+          icon={ChevronLeft}
+          onClick={() => onPageHandle(PageActionState.PrevPage)}
+        />
+        {Array.from({ length: endPage - startPage + 1 }).map((_, idx) => {
+          const pageNum = startPage + idx;
+          const isActive = activePage === pageNum;
+          return (
+            <PageItemButton
+              key={pageNum}
+              page={pageNum}
+              isActive={isActive}
+              onClick={() => pageHandler({ pageNumber: pageNum })}
+            />
+          );
+        })}
+        <PageActionButton
+          icon={ChevronRight}
+          onClick={() => onPageHandle(PageActionState.NextPage)}
+        />
+        <PageActionButton
+          icon={ChevronsRight}
+          onClick={() => onPageHandle(PageActionState.LastPage)}
+        />
+      </div>
+    </Suspense>
   );
 };
 

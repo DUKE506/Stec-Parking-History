@@ -1,6 +1,6 @@
 import XLSX from "xlsx-js-style";
-import { History } from "@prisma/client";
-import { ListBaseType, ListLoading, ListModel } from "@/types/list-type";
+import { History } from "@/types/history/histroy";
+import { ListBaseType, ListLoading } from "@/types/list-type";
 import dayjs from "dayjs";
 export const onHistoryExportData = async ({
   title,
@@ -18,20 +18,20 @@ export const onHistoryExportData = async ({
 
     const dataToExport = (datas as History[]).map((data: History) => {
       return {
-        차량구분: data.carType, // 세미콜론(;) 대신 쉼표(,) 사용
-        차량상태: data.parkingState,
-        차량번호: data.carNumber,
-        입차일시: dayjs(data.entryTime).format("YYYY-MM-DD HH:mm:ss"),
+        차량구분: data.ioTicketTp, // 세미콜론(;) 대신 쉼표(,) 사용
+        차량상태: data.ioStatusTpNm,
+        차량번호: data.carNum,
+        입차일시: dayjs(data.inDtm).format("YYYY-MM-DD HH:mm:ss"),
         출차일시:
-          data.exitTime == null ? "" : dayjs().format("YYYY-MM-DD HH:mm:ss"),
-        주차시간: data.totalTime,
-        주차장명: data.parkingAreaName,
-        입차초소: data.entryArea,
-        출차초소: data.exitArea,
+          data.outDtm == null ? "" : dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        주차시간: data.parkingDuration,
+        주차장명: data.pId,
+        입차초소: data.inGateNm,
+        출차초소: data.outGateNm,
         동: data.dong,
         호: data.ho,
-        블랙리스트: data.isBlack,
-        비고: data.note,
+        블랙리스트: data.isBlacklist,
+        비고: data.memo,
       };
     });
 
@@ -89,8 +89,10 @@ export const onHistoryExportData = async ({
     XLSX.utils.book_append_sheet(workbook, worksheet, worksheetname);
     // Save the workbook as an Excel file
     XLSX.writeFile(workbook, `${title}.xlsx`);
-    console.log(`Exported data to ${title}.xlsx`);
+    // console.log(`Exported data to ${title}.xlsx`);
+    return true;
   } catch (err: any) {
-    console.log("#==================Export Error", err.message);
+    return false;
+    // console.log("#==================Export Error", err.message);
   }
 };

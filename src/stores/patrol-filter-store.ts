@@ -18,7 +18,7 @@ interface PatrolFilterState {
 }
 
 export const usePatrolFilterStore = create<PatrolFilterState>()(
-  devtools((set, get) => ({
+  devtools((set) => ({
     state: null,
     duration: null,
     carNumber: "",
@@ -69,7 +69,6 @@ export const usePatrolFilterStore = create<PatrolFilterState>()(
      * @param num
      */
     setViewSize: (num) => {
-      console.log("상태관리 뷰 사이즈 : ", num);
       if (!num) {
         set({ viewSize: 20 });
       } else {

@@ -1,27 +1,32 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { History, ParkingState } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Check, Circle } from "lucide-react";
+import { History } from "@/types/history/histroy";
 import dayjs from "dayjs";
+import { ParkingState, ParkingStateUnionType } from "@/types/history/histroy";
 
 export const columns: ColumnDef<History>[] = [
   {
-    accessorKey: "carType",
+    accessorKey: "ioTicketTpNm",
     header: () => <div className="text-center">입출유형</div>,
+    cell: ({ row }) => {
+      const value = row.getValue("ioTicketTpNm") as string;
+      return <div className="text-center">{value}</div>;
+    },
   },
   {
-    accessorKey: "parkingState",
+    accessorKey: "ioStatusTpNm",
     header: () => <div className="text-center">차량상태</div>,
     cell: ({ row }) => {
-      const value = row.getValue("parkingState") as ParkingState;
+      const value = row.getValue("ioStatusTpNm") as ParkingStateUnionType;
       let backgroundColor = "bg-muted-foreground";
       switch (value) {
-        case ParkingState.입차:
+        case ParkingState.IN:
           backgroundColor = "bg-blue-500";
           break;
-        case ParkingState.출차:
+        case ParkingState.OUT:
           backgroundColor = "bg-destructive";
           break;
       }
@@ -34,7 +39,7 @@ export const columns: ColumnDef<History>[] = [
     },
   },
   {
-    accessorKey: "carNumber",
+    accessorKey: "carNum",
     // header: '차량번호',
     header: ({ column }) => {
       return (
@@ -52,12 +57,12 @@ export const columns: ColumnDef<History>[] = [
       );
     },
     cell: ({ row }) => {
-      const value = row.getValue("carNumber") as string;
+      const value = row.getValue("carNum") as string;
       return <div className="text-center">{value}</div>;
     },
   },
   {
-    accessorKey: "entryTime",
+    accessorKey: "inDtm",
     header: ({ column }) => {
       return (
         <div className="text-center">
@@ -74,7 +79,7 @@ export const columns: ColumnDef<History>[] = [
       );
     },
     cell: ({ row }) => {
-      const value = row.original.entryTime;
+      const value = row.original.inDtm;
       if (!value) {
         return <div className="text-center"></div>;
       }
@@ -85,7 +90,7 @@ export const columns: ColumnDef<History>[] = [
     },
   },
   {
-    accessorKey: "exitTime",
+    accessorKey: "outDtm",
     header: ({ column }) => {
       return (
         <div className="text-center">
@@ -102,7 +107,7 @@ export const columns: ColumnDef<History>[] = [
       );
     },
     cell: ({ row }) => {
-      const value = row.original.exitTime;
+      const value = row.original.outDtm;
       if (!value) {
         return <div className="text-center"></div>;
       }
@@ -113,7 +118,7 @@ export const columns: ColumnDef<History>[] = [
     },
   },
   {
-    accessorKey: "totalTime",
+    accessorKey: "parkingDuration",
     header: ({ column }) => {
       return (
         <div className="text-center">
@@ -130,7 +135,7 @@ export const columns: ColumnDef<History>[] = [
       );
     },
     cell: ({ row }) => {
-      const value = row.getValue("totalTime") as string;
+      const value = row.getValue("parkingDuration") as string;
       return <div className="text-center">{value}</div>;
     },
   },
@@ -143,18 +148,18 @@ export const columns: ColumnDef<History>[] = [
     },
   },
   {
-    accessorKey: "entryArea",
+    accessorKey: "inGateNm",
     header: () => <div className="text-center">입차초소</div>,
     cell: ({ row }) => {
-      const value = row.getValue("entryArea") as string;
+      const value = row.getValue("inGateNm") as string;
       return <div className="text-center">{value}</div>;
     },
   },
   {
-    accessorKey: "exitArea",
+    accessorKey: "outGateNm",
     header: () => <div className="text-center">출차초소</div>,
     cell: ({ row }) => {
-      const value = row.getValue("entryArea") as string;
+      const value = row.getValue("outGateNm") as string;
       return <div className="text-center">{value}</div>;
     },
   },
@@ -203,13 +208,12 @@ export const columns: ColumnDef<History>[] = [
     },
   },
   {
-    accessorKey: "isBlack",
+    accessorKey: "isBlacklist",
     header: "블랙",
     cell: ({ row }) => {
-      const value = row.getValue("isBlack");
-      const returnValue = value ? (
-        <Circle className="text-destructive" size={20} />
-      ) : null;
+      const value = row.getValue("isBlacklist");
+      const returnValue =
+        value == "1" ? <Circle className="text-destructive" size={20} /> : null;
       return (
         <div>
           <div className="flex justify-center">{returnValue}</div>
@@ -218,10 +222,10 @@ export const columns: ColumnDef<History>[] = [
     },
   },
   {
-    accessorKey: "note",
+    accessorKey: "memo",
     header: () => <div className="text-center">비고</div>,
     cell: ({ row }) => {
-      const value = row.getValue("note") as string;
+      const value = row.getValue("memo") as string;
       const returnValue = value ? (
         <Check className="text-blue-500" size={20} />
       ) : null;

@@ -4,18 +4,11 @@ import DatePickerWithRange from "@/app/_components/custom-date-picker/custom-dat
 import CustomInput from "@/app/_components/custom-input/custom-input";
 import { CustomSelect } from "@/app/_components/custom-select/custom-select";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useApiStore } from "@/stores/api-store";
 import { usePatrolFilterStore } from "@/stores/patrol-filter-store";
 import { PatrolState } from "@/types/patrol/patrol";
 import { isValidDate } from "@/utils/utils";
-import { subDays } from "date-fns";
 import { RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -35,13 +28,19 @@ const Filter = () => {
     setFilterReset,
   } = usePatrolFilterStore();
 
-  const onSearch = () => {
-    if (state) queryParams.append("state", state);
+  const onSearch = (searchCarNumber?: string) => {
+    if (state) queryParams.append("patrolNm", state);
     if (isValidDate(duration?.from) && duration?.from)
       queryParams.append("startDate", duration?.from.toString());
     if (isValidDate(duration?.to) && duration?.to)
       queryParams.append("endDate", duration.to.toString());
-    if (carNumber) queryParams.append("carNumber", carNumber);
+
+    // 2) 값이 있으면 carNumber를 쿼리에 추가
+    if (searchCarNumber) {
+      // console.log("검색함수 : ", searchCarNumber);
+      queryParams.append("carNumber", searchCarNumber);
+    } else if (!searchCarNumber && carNumber)
+      queryParams.append("carNumber", carNumber);
 
     setPage(1);
 
@@ -50,48 +49,54 @@ const Filter = () => {
     router.push(url);
   };
 
-  const handleEnterKey = (e: KeyboardEvent) => {
-    if (e.code !== "Enter") return;
+  const handleEnterKey = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log(e.key === "NumpadEnter");
+    if (e.key !== "Enter" && e.key !== "NumpadEnter") return;
 
-    onSearch();
+    onSearch(e.currentTarget.value);
   };
 
   return (
-    <Card className="h-fit">
-      <CardHeader className="flex-row items-center">
-        <CardTitle>검색 조건</CardTitle>
-        <RotateCcw
-          size={15}
-          className="text-muted-foreground hover:cursor-pointer hover:text-black"
-          onClick={setFilterReset}
-        />
-      </CardHeader>
-      <CardContent className="flex flex-col gap-6">
-        <DatePickerWithRange
-          label="기간"
-          option={true}
-          values={duration}
-          onChange={setDuration}
-        />
-        <CustomSelect
-          label="순찰상태"
-          values={PatrolState}
-          defaultValue={state}
-          onChange={setState}
-          onKeyDown={() => handleEnterKey}
-        />
-        <CustomInput
-          label="차량번호"
-          value={carNumber}
-          onChange={setCarNumber}
-        />
-      </CardContent>
-      <CardFooter>
-        <Button className="w-full hover:cursor-pointer" onClick={onSearch}>
-          조회
-        </Button>
-      </CardFooter>
-    </Card>
+    <div className="container max-w-full px-10">
+      <Card className="h-fit">
+        <CardHeader className="flex-row items-center">
+          <CardTitle>검색 조건</CardTitle>
+          <RotateCcw
+            size={15}
+            className="text-muted-foreground hover:cursor-pointer hover:text-black"
+            onClick={setFilterReset}
+          />
+        </CardHeader>
+        <CardContent className="flex gap-8 w-[800px]">
+          <DatePickerWithRange
+            label="기간"
+            option={true}
+            values={duration}
+            onChange={setDuration}
+          />
+          <CustomSelect
+            label="순찰상태"
+            values={PatrolState}
+            defaultValue={state}
+            onChange={setState}
+          />
+          <CustomInput
+            label="차량번호"
+            value={carNumber}
+            onChange={setCarNumber}
+            onKeyDown={(e) => handleEnterKey(e)}
+          />
+          <div className="flex items-end">
+            <Button
+              className="w-full hover:cursor-pointer"
+              onClick={() => onSearch()}
+            >
+              조회
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

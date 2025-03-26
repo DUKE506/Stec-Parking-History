@@ -1,24 +1,25 @@
 import { CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const CustomInput = ({
   label,
   value,
+  placeholder,
   onChange,
+  onKeyDown,
+  ...field
 }: {
-  label: string;
+  label?: string;
   value: string;
+  placeholder?: string;
   onChange: (value: string) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }) => {
-  const [inputValue, setInputValue] = useState<string>("");
-
-  useEffect(() => {
-    setInputValue(value);
-  }, [value]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" || e.key === "NumpadEnter") {
+      onKeyDown?.(e);
+    }
   };
 
   return (
@@ -26,9 +27,11 @@ const CustomInput = ({
       <CardDescription>{label}</CardDescription>
       <Input
         className="w-full"
-        value={inputValue}
-        onBlur={() => onChange(inputValue)}
-        onChange={(e) => handleChange(e)}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onKeyDown={handleKeyDown}
+        placeholder={placeholder}
+        {...field}
       />
     </div>
   );

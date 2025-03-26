@@ -11,53 +11,60 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Patrol } from "@prisma/client";
+import { usePatrolStore } from "@/stores/patrol-store";
+import { Patrol } from "@/types/patrol/patrol";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import dayjs from "dayjs";
 import Image from "next/image";
 import React from "react";
 
-export const PatrolDetail = ({ data }: { data: Patrol }) => {
+export const PatrolDetail = () => {
+  const { currentPatrol } = usePatrolStore();
+
   return (
-    <Card className="fixed bottom-10 w-[inherit] max-w-[inherit] h-[350px]">
+    <Card className="min-w-[350px] h-fit min-h-[367px] sticky top-6">
       <CardHeader>
-        <CardTitle>{data.carNumber} 순찰 정보</CardTitle>
+        <CardTitle>{currentPatrol?.carNum} 순찰 정보</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
-          <Dialog>
-            <DialogTrigger className="hover:cursor-pointer">
-              <ImageArea data={data} />
-            </DialogTrigger>
-            {data.img ? (
-              <DialogContent className="lg:max-w-[60vw]">
-                <DialogHeader>
-                  <DialogTitle>이미지</DialogTitle>
-                </DialogHeader>
-                <CustomCarousel urls={[data.img]} />
-              </DialogContent>
-            ) : null}
-          </Dialog>
-          <CardDescription>비고</CardDescription>
-          <div className="text-sm">{data.note}</div>
-        </div>
-      </CardContent>
+      {currentPatrol === null ? (
+        <div></div>
+      ) : (
+        <CardContent className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <Dialog>
+              <DialogTrigger className="hover:cursor-pointer">
+                <ImageArea data={currentPatrol} />
+              </DialogTrigger>
+              {currentPatrol.patrolImg ? (
+                <DialogContent className="lg:max-w-[60vw]">
+                  <DialogHeader>
+                    <DialogTitle>이미지</DialogTitle>
+                  </DialogHeader>
+                  <CustomCarousel urls={[currentPatrol.patrolImg]} />
+                </DialogContent>
+              ) : null}
+            </Dialog>
+            <CardDescription>비고</CardDescription>
+            <div className="text-sm">{currentPatrol.patrolRemark}</div>
+          </div>
+        </CardContent>
+      )}
     </Card>
   );
 };
 
 export const ImageArea = ({ data }: { data: Patrol }) => {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 h-full">
       <div className="flex justify-between">
         <CardDescription>이미지</CardDescription>
         <span className="text-xs">
-          {dayjs(data.time).format("YYYY-MM-DD HH:mm:ss")}
+          {dayjs(data.patrolDtm).format("YYYY-MM-DD HH:mm:ss")}
         </span>
       </div>
-      {data.img ? (
-        <div className="relative rounded-sm overflow-hidden w-full h-full max-h-[150px] min-h-[150px]">
-          <Image src={data.img} alt="이미지" fill />
+      {data.patrolImg ? (
+        <div className="relative h-full rounded-sm overflow-hidden max-h-[173.5px] min-h-[173.5px]">
+          <Image src={data.patrolImg} alt="이미지" fill />
         </div>
       ) : null}
     </div>

@@ -1,3 +1,4 @@
+"use client";
 import { useApiStore } from "@/stores/api-store";
 import { useFilterStore } from "@/stores/filter-store";
 import { useHistoryStore } from "@/stores/histories-store";
@@ -15,7 +16,6 @@ export function useQuerySync() {
   const { setPagination } = useHistoryStore();
   const { setQueryParams } = useApiStore();
   const {
-    page,
     setCarType,
     setParkingState,
     setCarNumber,
@@ -32,12 +32,14 @@ export function useQuerySync() {
     //   "쿼리 파라미터 : ",
     //   new URLSearchParams(searchParams).toString()
     // );
-    if (!searchParams) return; // 
+    if (!searchParams) return; //
 
-    setCarType((searchParams.get("carType") as CarUnionType) ?? CarType.ALL);
+    setCarType(
+      (searchParams.get("ioTicketTpNm") as CarUnionType) ?? CarType.ALL
+    );
     setParkingState(
-      (searchParams.get("parkingState") as ParkingStateUnionType) ??
-      ParkingState.ALL
+      (searchParams.get("ioStatusTpNm") as ParkingStateUnionType) ??
+        ParkingState.ALL
     );
     setCarNumber(searchParams.get("carNumber") ?? "");
 
@@ -48,8 +50,8 @@ export function useQuerySync() {
     setDong(searchParams.get("dong") ?? "");
     setHo(searchParams.get("ho") ?? "");
 
-    setViewSize(parseInt(searchParams.get("viewSize") ?? "20"));
-    setPage(parseInt(searchParams.get("page") ?? "1"));
+    setViewSize(parseInt(searchParams.get("pageSize") ?? "20"));
+    setPage(parseInt(searchParams.get("pageNumber") ?? "1"));
 
     setQueryParams(new URLSearchParams(searchParams).toString());
     setPagination();

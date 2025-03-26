@@ -7,11 +7,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { addDays, format, isValid, startOfDay, subDays } from "date-fns";
+import { format, subDays } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
-import { is, ko } from "date-fns/locale";
+import { ko } from "date-fns/locale";
 import { CardDescription } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { isValidDate } from "@/utils/utils";

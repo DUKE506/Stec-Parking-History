@@ -15,20 +15,24 @@ export class ListModel<T> extends ListBaseType {
 }
 
 export class ListMeta {
-  totalItemCount: number;
+  totalCount: number;
   pageSize: number;
-  activePage: number;
+  pageNumber: number;
+  totalPages: number;
   constructor({
-    totalItemCount,
+    totalCount,
     pageSize,
-    activePage,
+    pageNumber,
+    totalPages,
   }: {
-    totalItemCount: number;
+    totalCount: number;
     pageSize: number;
-    activePage: number;
+    pageNumber: number;
+    totalPages: number;
   }) {
-    (this.totalItemCount = totalItemCount),
+    (this.totalCount = totalCount),
       (this.pageSize = pageSize),
-      (this.activePage = activePage);
+      (this.pageNumber = pageNumber),
+      (this.totalPages = totalPages);
   }
 }

@@ -1,4 +1,3 @@
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -8,8 +7,6 @@ import {
 } from "@/components/ui/carousel";
 import React from "react";
 import Image from "next/image";
-
-import carIamge from "../../../../public/차량번호판 인식사진.jpg";
 
 export const CustomCarousel = ({ urls }: { urls: string[] }) => {
   return (

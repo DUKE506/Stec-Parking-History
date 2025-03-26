@@ -1,10 +1,16 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+"use client";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 import CustomSheet from "../custom-sheet/custom-sheet";
 import { useHistoryStore } from "@/stores/histories-store";
-import { ParkingState } from "@prisma/client";
 import CustomTextAreaForm from "../custom-text-area/custom-textarea";
 import dayjs from "dayjs";
 import { useHistoryInfoStore } from "@/stores/history-info-store";
@@ -15,32 +21,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import { CustomCarousel } from "../custom-carousel/custom-carousel";
-export const ImageArea = ({
-  label,
-  time,
-  url,
-}: {
-  label: string;
-  time: string | null;
-  url?: string | null;
-}) => {
-  return (
-    <div className="flex flex-col gap-2 h-full">
-      <div className="flex justify-between ">
-        <CardDescription>
-          {label}
-        </CardDescription>
-
-        <span className="text-xs">{time}</span>
-      </div>
-      <div className="relative h-full rounded-sm overflow-hidden max-h-[173.5px] min-h-[173.5px]">
-        {url ? <Image src={url} alt="이미지" fill /> : null}
-      </div>
-    </div>
-  );
-};
+import { ParkingState } from "@/types/history/histroy";
 
 /**
  * 이미지는 다이얼로그는 캐러샐로 구현
@@ -48,26 +31,26 @@ export const ImageArea = ({
  */
 const HistoryInfoArea = () => {
   const { currentHistory, setHistoryNote } = useHistoryStore();
-  const [isOpen, setIsOpen] = useState(false);
+
   const { fetchWeekLogs } = useHistoryInfoStore();
   const [Images, setImages] = useState<string[]>([]);
 
   useEffect(() => {
-    if (currentHistory && currentHistory.entryImage) {
+    if (currentHistory && currentHistory.inDtm && currentHistory.inImagePath) {
       // 배열에 이미지 추가
-      setImages([currentHistory.entryImage]);
+      setImages([currentHistory.inImagePath]);
 
       // 출차 이미지가 있으면 추가
-      if (currentHistory.exitImage) {
-        setImages([currentHistory.entryImage, currentHistory.exitImage]);
+      if (currentHistory.outDtm && currentHistory.outImagePath) {
+        setImages([currentHistory.inImagePath, currentHistory.outImagePath]);
       }
     }
   }, [currentHistory]);
 
   return (
-    <Card className="flex-1 h-full">
+    <Card className="min-w-[350px] h-fit min-h-[367px] sticky top-6">
       <CardHeader className="flex-row justify-between">
-        <CardTitle>{currentHistory?.carNumber} 정보</CardTitle>
+        <CardTitle>{currentHistory?.carNum} 정보</CardTitle>
         {currentHistory !== null ? (
           <CustomSheet
             label="더보기"
@@ -81,10 +64,8 @@ const HistoryInfoArea = () => {
             <DialogTrigger className="hover:cursor-pointer">
               <ImageArea
                 label="입차"
-                time={dayjs(currentHistory.entryTime).format(
-                  "YYYY-MM-DD HH:mm:ss"
-                )}
-                url={currentHistory.entryImage}
+                time={dayjs(currentHistory.inDtm).format("YYYY-MM-DD HH:mm:ss")}
+                url={currentHistory.inImagePath}
               />
             </DialogTrigger>
 
@@ -96,15 +77,15 @@ const HistoryInfoArea = () => {
             </DialogContent>
           </Dialog>
 
-          {currentHistory.parkingState === ParkingState.출차 ? (
+          {currentHistory.ioStatusTpNm === ParkingState.OUT ? (
             <Dialog>
               <DialogTrigger className="hover:cursor-pointer">
                 <ImageArea
                   label="출차"
-                  time={dayjs(currentHistory.exitTime).format(
+                  time={dayjs(currentHistory.outDtm).format(
                     "YYYY-MM-DD HH:mm:ss"
                   )}
-                  url={currentHistory.exitImage}
+                  url={currentHistory.outImagePath}
                 />
               </DialogTrigger>
 
@@ -117,12 +98,12 @@ const HistoryInfoArea = () => {
             </Dialog>
           ) : null}
           <CustomTextAreaForm
-            key={currentHistory.id}
+            key={currentHistory.pId}
             label="비고"
             placeholder="특이사항을 입력하세요"
-            value={currentHistory.note ?? undefined}
+            value={currentHistory.memo ?? undefined}
             setValue={(value) => {
-              currentHistory.note = value;
+              currentHistory.memo = value;
               setHistoryNote(currentHistory);
             }}
           />
@@ -133,3 +114,26 @@ const HistoryInfoArea = () => {
 };
 
 export default HistoryInfoArea;
+
+export const ImageArea = ({
+  label,
+  time,
+  url,
+}: {
+  label: string;
+  time: string | null;
+  url?: string | null;
+}) => {
+  return (
+    <div className="flex flex-col gap-2 h-full">
+      <div className="flex justify-between ">
+        <CardDescription>{label}</CardDescription>
+
+        <span className="text-xs">{time}</span>
+      </div>
+      <div className="relative h-full rounded-sm overflow-hidden max-h-[173.5px] min-h-[173.5px]">
+        {url ? <Image src={url} alt="이미지" fill /> : null}
+      </div>
+    </div>
+  );
+};

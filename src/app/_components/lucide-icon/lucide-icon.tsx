@@ -10,7 +10,6 @@ interface LucideInconProps extends HTMLAttributes<HTMLOrSVGElement> {
 
 const LucideIcon = ({
   name,
-  color = "gr4",
   size = 18,
   strokeWidth = 1.5,
   ...props
