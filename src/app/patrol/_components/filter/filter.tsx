@@ -31,9 +31,9 @@ const Filter = () => {
   const onSearch = (searchCarNumber?: string) => {
     if (state) queryParams.append("patrolNm", state);
     if (isValidDate(duration?.from) && duration?.from)
-      queryParams.append("startDate", duration?.from.toString());
+      queryParams.append("startDate", duration?.from.toISOString());
     if (isValidDate(duration?.to) && duration?.to)
-      queryParams.append("endDate", duration.to.toString());
+      queryParams.append("endDate", duration.to.toISOString());
 
     // 2) 값이 있으면 carNumber를 쿼리에 추가
     if (searchCarNumber) {

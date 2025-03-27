@@ -46,9 +46,9 @@ const FilterArea = () => {
     if (parkingState) queryParams.append("ioStatusTpNm", parkingState);
     if (carNumber) queryParams.append("carNumber", carNumber);
     if (isValidDate(duration?.from) && duration?.from)
-      queryParams.append("startDate", duration?.from.toString());
+      queryParams.append("startDate", duration?.from.toISOString());
     if (isValidDate(duration?.to) && duration?.to)
-      queryParams.append("endDate", duration.to.toString());
+      queryParams.append("endDate", duration.to.toISOString());
     if (dong) queryParams.append("dong", dong);
     if (ho) queryParams.append("ho", ho);
     setPage(1);

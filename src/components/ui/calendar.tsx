@@ -537,6 +537,14 @@ function YearGrid({
 } & React.HTMLAttributes<HTMLDivElement>) {
   const { goToMonth, selected } = useDayPicker();
 
+  // 타입 가드와 타입 단언을 결합한 안전한 월 선택 로직
+  const selectedMonth = React.useMemo(() => {
+    if (selected && typeof selected === "object" && "getMonth" in selected) {
+      return (selected as Date).getMonth();
+    }
+    return 0;
+  }, [selected]);
+
   return (
     <div className={cn("grid grid-cols-4 gap-y-2", className)} {...props}>
       {Array.from(
@@ -555,6 +563,7 @@ function YearGrid({
             ) > 0;
 
           const isDisabled = isBefore || isAfter;
+
           return (
             <Button
               key={i}
@@ -566,12 +575,7 @@ function YearGrid({
               variant="ghost"
               onClick={() => {
                 setNavView("days");
-                goToMonth(
-                  new Date(
-                    displayYears.from + i,
-                    (selected as Date | undefined)?.getMonth() ?? 0
-                  )
-                );
+                goToMonth(new Date(displayYears.from + i, selectedMonth));
               }}
               disabled={navView === "years" ? isDisabled : undefined}
             >
@@ -583,5 +587,4 @@ function YearGrid({
     </div>
   );
 }
-
 export { Calendar };
