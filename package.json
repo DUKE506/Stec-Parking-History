@@ -2,6 +2,7 @@
   "name": "next-parking-history",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -45,7 +46,7 @@
     "@eslint/eslintrc": "^3",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "20.17.28",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.21",
@@ -53,7 +54,7 @@
     "eslint-config-next": "15.2.2",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.0.15",
-    "typescript": "^5"
+    "typescript": "5.8.2"
   },
   "overrides": {
     "@radix-ui/react-icons": {
