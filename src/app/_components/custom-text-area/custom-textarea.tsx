@@ -103,7 +103,7 @@ const CustomTextAreaForm = ({
           )}
         />
         {isEdit ? (
-          <Button className="w-full" type="submit">
+          <Button className="text-xs  w-full" type="submit">
             저장
           </Button>
         ) : null}

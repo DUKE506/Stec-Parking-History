@@ -88,7 +88,7 @@ const Filter = () => {
           />
           <div className="flex items-end">
             <Button
-              className="w-full hover:cursor-pointer"
+              className="w-full text-xs  hover:cursor-pointer"
               onClick={() => onSearch()}
             >
               조회

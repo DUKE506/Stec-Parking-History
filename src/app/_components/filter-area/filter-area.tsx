@@ -108,7 +108,10 @@ const FilterArea = () => {
             onKeyDown={(e) => handleEnterKey(e)}
           />
           <div className="flex items-center">
-            <Button className="hover:cursor-pointer" onClick={onSearch}>
+            <Button
+              className="text-xs  hover:cursor-pointer"
+              onClick={onSearch}
+            >
               조회
             </Button>
           </div>
