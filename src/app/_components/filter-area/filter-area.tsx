@@ -71,7 +71,7 @@ const FilterArea = () => {
         </CardHeader>
         <CardContent className="flex justify-between gap-8 items-end ">
           <CustomSelect
-            label="입출유형"
+            label="방문유형"
             values={CarType}
             defaultValue={carType}
             onChange={setCarType}

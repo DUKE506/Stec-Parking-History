@@ -1,9 +1,9 @@
 //차량 구분
 export const CarType = {
   ALL: "전체",
+  NORMAL: "일반차량",
   REGULAR: "정기차량", // 정기차량
   RESERVED: "예약차량", // 예약차량
-  VISIT: "방문차량",
 } as const;
 
 export type CarUnionType = (typeof CarType)[keyof typeof CarType];

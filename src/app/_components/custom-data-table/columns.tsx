@@ -10,7 +10,7 @@ import { ParkingState, ParkingStateUnionType } from "@/types/history/histroy";
 export const columns: ColumnDef<History>[] = [
   {
     accessorKey: "ioTicketTpNm",
-    header: () => <div className="text-center">입출유형</div>,
+    header: () => <div className="text-center">방문유형</div>,
     cell: ({ row }) => {
       const value = row.getValue("ioTicketTpNm") as string;
       return <div className="text-center">{value}</div>;
@@ -136,7 +136,7 @@ export const columns: ColumnDef<History>[] = [
     },
     cell: ({ row }) => {
       const value = row.getValue("parkingDuration") as string;
-      return <div className="text-center">{value}</div>;
+      return <div className="text-center">{value ? `${value}분` : null}</div>;
     },
   },
   {
