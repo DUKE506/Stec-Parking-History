@@ -60,7 +60,7 @@ const Filter = () => {
     <div className="container max-w-full px-10">
       <Card className="h-fit">
         <CardHeader className="flex-row items-center">
-          <CardTitle>검색 조건</CardTitle>
+          <CardTitle>조회 조건</CardTitle>
           <RotateCcw
             size={15}
             className="text-muted-foreground hover:cursor-pointer hover:text-black"
