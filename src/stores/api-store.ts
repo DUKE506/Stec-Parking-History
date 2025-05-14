@@ -23,7 +23,7 @@ export const useApiStore = create<ApiState>()(
         //
         aptName: "",
         //env로 관리 예정
-        baseUrl: "http://123.2.156.148:5255/",
+        baseUrl: "http://192.168.10.110:5255/",
         apiVersion: "v1",
         theHamBizIp: null,
         queryParams: "",
@@ -68,15 +68,15 @@ export const useApiStore = create<ApiState>()(
         },
         getTheHamBizIp: async () => {
           const { baseUrl } = get();
-          const res = await fetch(`${baseUrl}api/IpSetting/v1/GetIpAddress`, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-          });
+            const res = await fetch(`${baseUrl}api/IpSetting/v1/GetIpAddress`, {
+              method: "GET",
+              headers: { "Content-Type": "application/json" },
+            });
 
-          const ip = await res.json();
+            const ip = await res.json();
 
-          if (res.ok) set({ theHamBizIp: ip.data.ipAddress });
-          const { theHamBizIp } = get();
+            if (res.ok) set({ theHamBizIp: ip.data.ipAddress });
+            const { theHamBizIp } = get();
         },
       }),
       {
