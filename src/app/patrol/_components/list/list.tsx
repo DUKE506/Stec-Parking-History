@@ -51,7 +51,7 @@ const List = () => {
   //view 개수 변경 핸들러
   const onSelectViewNum = (value: number) => {
     const params = new URLSearchParams(queryParams);
-    params.set("viewSize", value.toString());
+    params.set("pageSize", value.toString());
     params.set("page", "1");
     setPage(1);
     setViewSize(value);

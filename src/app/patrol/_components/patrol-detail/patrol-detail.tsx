@@ -15,8 +15,9 @@ import { usePatrolStore } from "@/stores/patrol-store";
 import { Patrol } from "@/types/patrol/patrol";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import dayjs from "dayjs";
+import { ImageIcon } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 
 export const PatrolDetail = () => {
   const { currentPatrol } = usePatrolStore();
@@ -32,7 +33,7 @@ export const PatrolDetail = () => {
         <CardContent className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <Dialog>
-              <DialogTrigger className="hover:cursor-pointer">
+              <DialogTrigger className={`${currentPatrol.patrolImg ? 'hover:cursor-pointer' : ""}`}>
                 <ImageArea data={currentPatrol} />
               </DialogTrigger>
               {currentPatrol.patrolImg ? (
@@ -54,6 +55,7 @@ export const PatrolDetail = () => {
 };
 
 export const ImageArea = ({ data }: { data: Patrol }) => {
+  const [imageError, setImageError] = useState<boolean>(false)
   return (
     <div className="flex flex-col gap-2 h-full">
       <div className="flex justify-between">
@@ -62,11 +64,11 @@ export const ImageArea = ({ data }: { data: Patrol }) => {
           {dayjs(data.patrolDtm).format("YYYY-MM-DD HH:mm:ss")}
         </span>
       </div>
-      {data.patrolImg ? (
+      {imageError && data.patrolImg ? (
         <div className="relative h-full rounded-sm overflow-hidden max-h-[173.5px] min-h-[173.5px]">
-          <Image src={data.patrolImg} alt="이미지" fill />
-        </div>
-      ) : null}
+          <Image src={data.patrolImg} alt="이미지" fill onError={()=>setImageError(true)}/>
+          </div>
+      ) : <div className="bg-gray-50 min-h-[173.5px] rounded-md flex justify-center items-center"><ImageIcon className="text-gray-300"/></div>}
     </div>
   );
 };

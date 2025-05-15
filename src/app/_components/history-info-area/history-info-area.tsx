@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { CustomCarousel } from "../custom-carousel/custom-carousel";
 import { ParkingState } from "@/types/history/histroy";
+import { ImageIcon } from "lucide-react";
 
 /**
  * 이미지는 다이얼로그는 캐러샐로 구현
@@ -124,6 +125,8 @@ export const ImageArea = ({
   time: string | null;
   url?: string | null;
 }) => {
+  const [imageError, setImageError] = useState<boolean>(false)
+  
   return (
     <div className="flex flex-col gap-2 h-full">
       <div className="flex justify-between ">
@@ -132,7 +135,7 @@ export const ImageArea = ({
         <span className="text-xs">{time}</span>
       </div>
       <div className="relative h-full rounded-sm overflow-hidden max-h-[173.5px] min-h-[173.5px]">
-        {url ? <Image src={url} alt="이미지" fill /> : null}
+      {imageError && url ? <Image src={url} alt="이미지" fill onError={()=>setImageError(true)} /> : <div className="bg-gray-50 min-h-[173.5px] rounded-md flex justify-center items-center"><ImageIcon className="text-gray-300"/></div>}
       </div>
     </div>
   );
